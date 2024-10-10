@@ -1,4 +1,4 @@
-import pandas as pd
+import pandas as pd 
 import pymysql
 
 def csv_to_mysql(csv_file_path, host, user, password, database, table_name):
