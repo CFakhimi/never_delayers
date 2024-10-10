@@ -1,10 +1,7 @@
 # never_delayers
 Databases Group Project Repository
 
-Branches:
+This is the branch for the Backend!
 
-Frontend- 
-For the frontend
-
-Backend-
-For the backend
+Current important files:
+build_table.py- builds the table from flight_delays dataset
