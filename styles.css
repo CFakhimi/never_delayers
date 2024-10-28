@@ -46,27 +46,43 @@ body {
 /* Modal Content */
 .modal-content {
     background-color: #fefefe;
-    margin: 5px auto;
+    margin: 5% auto 15% auto;
     border: 1px solid #888;
-    width: 80%
+    width: 80%;
 }
 
-/* Close Button */
-.close {
-    /* Put in top right corner */
-    position: absolute;
-    right: 25px;
-    top: 0;
-    color: #000;
-    font-size: 35px;
-    font-weight: bold;
+input[type=text], input[type=password]
+{
+    width: 100%;
+    padding: 12px 20px;
+    margin: 8px 0;
+    display: inline-block;
+    border: 1px solid #ccc;
+    box-sizing: border-box;
 }
 
-/* Close Button Hover */
-.close:hover,
-.close:focus {
-    color: red;
+button[type=submit] {
+    background-color: #04AA6D;
+    color: white;
+    padding: 14px 20px;
+    margin: 8px 0;
+    border: none;
     cursor: pointer;
+    width: 100%;
+}
+
+button:hover {
+    opacity: 0.8;
+}
+
+.cancelbtn {
+    width: auto;
+    padding: 10px 18px;
+    background-color: #f44336;
+    margin: 8px 0;
+    border: none;
+    cursor: pointer;
+    color: white;
 }
 
 /* Add Zoom Animation */
