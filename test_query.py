@@ -1,5 +1,66 @@
 import pymysql
 
+def insert_flight(host, user, password, database, table_name, flightID, airline, flightNumber, origin, destination, scheduledDeparture, actualDeparture, scheduledArrival, actualArrival, delayMinutes, delayReason):
+    connection = pymysql.connect(
+        host=host,
+        user=user,
+        password=password,
+        database=database
+    )
+    cursor = connection.cursor()
+
+    query = f"""
+    INSERT INTO {table_name} (FlightID, Airline, FlightNumber, Origin, Destination, ScheduledDeparture, 
+    ActualDeparture, ScheduledArrival, ActualArrival, DelayMinutes, DelayReason)
+    VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
+    """
+    values = (flightID, airline, flightNumber, origin, destination, scheduledDeparture, actualDeparture, scheduledArrival, actualArrival, delayMinutes, delayReason)
+
+    cursor.execute(query, values)
+    connection.commit()
+
+    cursor.close()
+    connection.close()
+
+def delete_flight(host, user, password, database, table_name, flightID):
+    connection = pymysql.connect(
+        host=host,
+        user=user,
+        password=password,
+        database=database
+    )
+    cursor = connection.cursor()
+
+    query = f"""
+    DELETE FROM {table_name} WHERE FlightID = %s
+    """
+
+    cursor.execute(query, flightID)
+    connection.commit()
+
+    cursor.close()
+    connection.close()
+
+def edit_flight(host, user, password, database, table_name, flightID, attribute, newValue):
+    connection = pymysql.connect(
+        host=host,
+        user=user,
+        password=password,
+        database=database
+    )
+    cursor = connection.cursor()
+
+    query = f"""
+    UPDATE {table_name} SET {attribute} = %s WHERE FlightID = %s
+    """
+
+    cursor.execute(query, (newValue, flightID))
+    connection.commit()
+
+    cursor.close()
+    connection.close()
+
+
 def average_delay(host, user, password, database, table_name):
     connection = pymysql.connect(
         host=host,
