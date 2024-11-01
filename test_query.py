@@ -1,6 +1,6 @@
 import pymysql
 
-def insert_flight(host, user, password, database, table_name, flightID, airline, flightNumber, origin, destination, scheduledDeparture, actualDeparture, scheduledArrival, actualArrival, delayMinutes, delayReason):
+def insert_flight(host, user, password, database, table_name, flightID, airline, flightNumber, origin, destination, departureDate, arrivalDate, scheduledDepartureTime, actualDepartureTime, scheduledArrivalTime, actualArrival, delayMinutes, delayReason):
     connection = pymysql.connect(
         host=host,
         user=user,
@@ -10,11 +10,11 @@ def insert_flight(host, user, password, database, table_name, flightID, airline,
     cursor = connection.cursor()
 
     query = f"""
-    INSERT INTO {table_name} (FlightID, Airline, FlightNumber, Origin, Destination, ScheduledDeparture, 
-    ActualDeparture, ScheduledArrival, ActualArrival, DelayMinutes, DelayReason)
-    VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
+    INSERT INTO {table_name} (Airline, FlightNumber, Origin, Destination, DepartureDate, ArrivalDate, 
+    ScheduledDepartureTime, ActualDepartureTime, ScheduledArrivalTime, ActualArrivalTime, DelayMinutes, DelayReason)
+    VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
     """
-    values = (flightID, airline, flightNumber, origin, destination, scheduledDeparture, actualDeparture, scheduledArrival, actualArrival, delayMinutes, delayReason)
+    values = (flightID, airline, flightNumber, origin, destination, departureDate, arrivalDate, scheduledDepartureTime, actualDepartureTime, scheduledArrivalTime, actualArrival, delayMinutes, delayReason)
 
     cursor.execute(query, values)
     connection.commit()
