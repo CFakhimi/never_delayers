@@ -117,6 +117,6 @@ if __name__ == "__main__":
     user = "cfakhimi"
     password = "1r1sh"
     database = "cfakhimi"
-    table_name = "flight_delays"
+    table_name = "new_flight_delays"
 
     average_delay(host, user, password, database, table_name)
