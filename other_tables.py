@@ -11,8 +11,6 @@ def create_user_table(host, user, password, database, table_name):
         )
     
     cursor = connection.cursor()
-    drop_table_query = f"DROP TABLE IF EXISTS {table_name};"
-    cursor.execute(drop_table_query)
 
     create_table_query = f"""
     CREATE TABLE IF NOT EXISTS {table_name} (
@@ -37,8 +35,6 @@ def create_layover_table(host, user, password, database, table_name):
         )
     
     cursor = connection.cursor()
-    drop_table_query = f"DROP TABLE IF EXISTS {table_name};"
-    cursor.execute(drop_table_query)
 
     create_table_query = f"""
     CREATE TABLE IF NOT EXISTS {table_name} (
@@ -48,7 +44,12 @@ def create_layover_table(host, user, password, database, table_name):
         NextAirport     CHAR(3),
         TimeInterval    INT,
         Airline         VARCHAR(255),
-        Date            DATE
+        Date            DATE,
+        UserID_FK       VARCHAR(255),
+	    FOREIGN KEY(UserID_FK)
+	  		REFERENCES users(Username)
+			ON DELETE SET NULL
+		    ON UPDATE CASCADE
     );
     """
 
@@ -56,3 +57,50 @@ def create_layover_table(host, user, password, database, table_name):
     connection.commit()
     cursor.close()
     connection.close()
+
+def create_flight_to_user_table(host, user, password, database, table_name):
+
+    #connect to mysql
+    connection = pymysql.connect(
+        host=host,
+        user=user,
+        password=password,
+        database=database
+        )
+    
+    cursor = connection.cursor()
+
+    create_table_query = f"""
+    CREATE TABLE IF NOT EXISTS {table_name} (
+        FlightID_FK     INT,
+        UserID_FK       VARCHAR(255),
+    	FOREIGN KEY(FlightID_FK)
+	  		REFERENCES new_flight_delays(FlightID)
+			ON DELETE SET NULL
+		    ON UPDATE CASCADE,
+	    FOREIGN KEY(UserID_FK)
+	  		REFERENCES users(Username)
+			ON DELETE SET NULL
+		    ON UPDATE CASCADE
+    );
+    """
+
+    cursor.execute(create_table_query)
+    connection.commit()
+    cursor.close()
+    connection.close()
+
+if __name__ == "__main__":
+    host = "localhost"
+    user = "cfakhimi"
+    password = "1r1sh"
+    database = "cfakhimi"
+
+    table_name = "users"
+    create_user_table(host, user, password, database, table_name)
+
+    table_name = "layovers"
+    create_layover_table(host, user, password, database, table_name)
+
+    table_name = "flight_creation"
+    create_flight_to_user_table(host, user, password, database, table_name)
