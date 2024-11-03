@@ -1,77 +1,53 @@
 import pymysql
 
-def insert_flight(host, user, password, database, table_name, flightID, airline, flightNumber, origin, destination, departureDate, arrivalDate, scheduledDepartureTime, actualDepartureTime, scheduledArrivalTime, actualArrival, delayMinutes, delayReason):
-    connection = pymysql.connect(
-        host=host,
-        user=user,
-        password=password,
-        database=database
-    )
-    cursor = connection.cursor()
+# Globals
+HOST = "localhost"
+USER = "cfakhimi"
+PASSWORD = "1r1sh"
+DATABASE = "cfakhimi"
 
+# Decorator to handle database connections
+def db_connection(func):
+    def with_connection(*args, **kwargs):
+        connection = pymysql.connect(
+            host=HOST,
+            user=USER,
+            password=PASSWORD,
+            database=DATABASE
+        )
+        cursor = connection.cursor()
+        result = func(cursor, *args, **kwargs)
+        connection.commit()
+        cursor.close()
+        connection.close()
+        return result
+
+    return with_connection
+
+@db_connection
+def insert_flight(cursor, table_name, flightID, airline, flightNumber, origin, destination, departureDate, arrivalDate, scheduledDepartureTime, actualDepartureTime, scheduledArrivalTime, actualArrivalTime, delayMinutes, delayReason):
     query = f"""
     INSERT INTO {table_name} (Airline, FlightNumber, Origin, Destination, DepartureDate, ArrivalDate, 
     ScheduledDepartureTime, ActualDepartureTime, ScheduledArrivalTime, ActualArrivalTime, DelayMinutes, DelayReason)
     VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
     """
-    values = (flightID, airline, flightNumber, origin, destination, departureDate, arrivalDate, scheduledDepartureTime, actualDepartureTime, scheduledArrivalTime, actualArrival, delayMinutes, delayReason)
-
+    values = (flightID, airline, flightNumber, origin, destination, departureDate, arrivalDate, scheduledDepartureTime, actualDepartureTime, scheduledArrivalTime, actualArrivalTime, delayMinutes, delayReason)
     cursor.execute(query, values)
-    connection.commit()
 
-    cursor.close()
-    connection.close()
+@db_connection
+def delete_flight(cursor, table_name, flightID):
+    query = f"DELETE FROM {table_name} WHERE FlightID = %s"
+    cursor.execute(query, (flightID,))
 
-def delete_flight(host, user, password, database, table_name, flightID):
-    connection = pymysql.connect(
-        host=host,
-        user=user,
-        password=password,
-        database=database
-    )
-    cursor = connection.cursor()
-
-    query = f"""
-    DELETE FROM {table_name} WHERE FlightID = %s
-    """
-
-    cursor.execute(query, flightID)
-    connection.commit()
-
-    cursor.close()
-    connection.close()
-
-def edit_flight(host, user, password, database, table_name, flightID, attribute, newValue):
-    connection = pymysql.connect(
-        host=host,
-        user=user,
-        password=password,
-        database=database
-    )
-    cursor = connection.cursor()
-
-    query = f"""
-    UPDATE {table_name} SET {attribute} = %s WHERE FlightID = %s
-    """
-
+@db_connection
+def edit_flight(cursor, table_name, flightID, attribute, newValue):
+    query = f"UPDATE {table_name} SET {attribute} = %s WHERE FlightID = %s"
     cursor.execute(query, (newValue, flightID))
-    connection.commit()
 
-    cursor.close()
-    connection.close()
-
-
-def average_delay(host, user, password, database, table_name):
-    connection = pymysql.connect(
-        host=host,
-        user=user,
-        password=password,
-        database=database
-    )
+@db_connection
+def average_delay(cursor, table_name):
     print("Connected to database")
     
-    cursor = connection.cursor()
-
     origin = input("Enter the origin airport initials: ").strip()
     destination = input("Enter the destination airport initials: ").strip()
     airline = input("Enter the airline: ").strip()
@@ -90,7 +66,6 @@ def average_delay(host, user, password, database, table_name):
 
     print(f"Average delay for {airline} from {origin} to {destination}: {user_avg_delay} minutes")
 
-    # Query to get the average delay for all airlines on the same route
     all_airlines_query = f"""
     SELECT Airline, AVG(DelayMinutes) AS avg_delay
     FROM {table_name}
@@ -102,21 +77,20 @@ def average_delay(host, user, password, database, table_name):
     result = cursor.fetchall()
 
     print("\nAverage delay for all airlines on this route:")
+    user_rank = None
     for i, (other_airline, avg_delay) in enumerate(result, 1):
         print(f"{i}. {other_airline}: {avg_delay} minutes")
         if other_airline == airline:
             user_rank = i
 
-    print(f"\n{airline} ranks #{user_rank} out of {len(result)} airlines on this route.")
-
-    cursor.close()
-    connection.close()
+    if user_rank:
+        print(f"\n{airline} ranks #{user_rank} out of {len(result)} airlines on this route.")
 
 if __name__ == "__main__":
-    host = "localhost"
-    user = "cfakhimi"
-    password = "1r1sh"
-    database = "cfakhimi"
     table_name = "new_flight_delays"
+    average_delay(table_name=table_name)
 
-    average_delay(host, user, password, database, table_name)
+# Need to determine the table_names we need for everything. 
+# Need to make sure the user can edit and delete a particular flight
+# Need to make it easier for them to insert a flight!!, do this by looking up? Do this maybe be doing math for them??
+# Need to fix the date issues maybe???
