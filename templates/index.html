@@ -1,70 +1,133 @@
 <!DOCTYPE html>
+
 <html lang="en">
     <head>
         <meta charset="UTF-8" />
         <title>Will I Be Delayed?</title>
-        <link rel="stylesheet" href="styles.css" />
+        <link rel="stylesheet" href="../static/css/styles.css" />
     </head>
     <body>
         <div class="header">
             <h1>Will I Be Delayed?</h1>
-            <!-- Display the current user, should have a default "Not logged in" -->
+            <!--
+            Display the current user, should have a default "Not logged in" 
             <h5>Current User: <span id="currUser"></span></h5>
-            <!-- Login button stuff -->
-            <button onclick="document.getElementById('id01').style.display='block'">Login</button>
-            <div id="id01" class="modal">
-                <span onclick="document.getElementByid('id01').style.display='none'" class="close" title="Close Modal">&times;</span>
-                <form class="modal-content animate" action="/login.py" method="post">
-                    <div class="container">
-                        <label for="uname"><b>Username:</b></label>
-                        <input type="text" placeholder="Enter Username" name="uname" required>
-                        <br />
-                        <label for="pswd"><b>Password:</b></label>
-                        <input type="password" placeholder="Enter Password" name="pswd" required>
-                        <br />
-                        <button type="submit">Login</button>
-                        <label>
-                            <input type="checkbox" checked="checked" name="remember">Remember me
-                        </label>
-                    </div>
-                    <div class="container" style="background-color: #f1f1f1">
-                        <button type="button" onclick="document.getElementById('id01').style.display='none'" class="cancelbtn">Cancel</button>
-                        <span class="pswd">Forgot <a href="#">password?</a></span>
-                    </div>
-                </form>
-            </div>
-            <!-- Account creation stuff -->
-            <button onclick="document.getElementById('id01').style.display='block'">Create an account</button>
-            <div id="id02" class="modal">
-                <span onclick="document.getElementByid('id01').style.display='none'" class="close" title="Close Modal">&times;</span>
-                <form class="modal-content animate" action="/login.py" method="post">
-                    <div class="container">
-                        <label for="uname"><b>Username:</b></label>
-                        <input type="text" placeholder="Enter Username" name="uname" required>
-                        <br />
-                        <label for="pswd"><b>Password:</b></label>
-                        <input type="password" placeholder="Enter Password" name="pswd" required>
-                        <br />
-                        <button type="submit">Login</button>
-                        <label>
-                            <input type="checkbox" checked="checked" name="remember">Remember me
-                        </label>
-                    </div>
-                </form>
+            -->
+        </div>
+        <div class="navbar"> 
+            <a href="/login.html">Login</a>
+            <a href="/user_creation.html">Create an Account</a>
+            <div class="nav-right">
+                <p><b>User: </b><span id="currUser"></span><p/>
             </div>
         </div>
-        <div id="mainDiv">***Will I Be Delayed is not responsible for any missed flight compensation.</div>
         <br />
-    <script>
-    // Get the modal
-    var modal = document.getElementById('id01');
-
-    // When the user clicks anywhere outside of the modal, close it
-    window.onclick = function(event) {
-        if (event.target == modal) {
-            modal.style.display = "none";
-        }
-    }
-    </script>
+        <div class="formDropdown">
+                <button class="formDropdownButton">Dropdown</button>
+                <div class="formDropdownContent">
+                    <a href="#" class="dataForm" form-type="predict" onclick="showPredictionForm()">
+                        Predict My Delay
+                    </a>
+                    <a href="#" class="dataForm" form-type="upload" onclick="showUploadForm()">
+                        Just Landed? -- Upload My Flight
+                    </a>
+                    <a href="#" class="dataForm" form-type="edit" onclick="showEditForm()">
+                        Edit My Uploaded Flights
+                    </a>
+                </div>
+            </div>
+        <p>***Will I Be Delayed is not responsible for any missed flight compensation.</p>
+        <form class="dataInput" id="delayPrediction">
+            <div>
+                <p>Want to know if you'll be delayed? Enter your flight info and we'll give you a prediction:</p>
+            </div>
+            <div>
+                <label for="airline"><b>Airline (do not abbreviate):</b></label>
+                <input type="text" placeholder="Enter Username" name="uname" required>
+            </div>
+            <div>
+                <label for="origin"><b>Origin Airport:</b></label>
+                <input type="text" placeholder="Enter Username" name="uname" required>
+            </div>
+            <div>
+                <label for="pswd"><b>Destination Airport:</b></label>
+                <input type="text" placeholder="Enter Password" name="pswd" required>
+            </div>
+            <button type="submit">Predict</button>
+        </form>
+        <form class="dataInput" id="delayUpload">
+            <p>Test 2</p>
+        </form>
+        <form class="dataInput" id="delayEdit">
+        </form>
     </body>
 </html>
+
+<script>
+function showPredictionForm() {
+    document.getElementById('delayPrediction').style.display = "flex";
+    document.getElementById('delayUpload').style.display = "none";
+    document.getElementById('delayEdit').style.display = "none";
+}
+    
+function showUploadForm() {
+    document.getElementById('delayPrediction').style.display = "none";
+    document.getElementById('delayUpload').style.display = "flex";
+    document.getElementById('delayEdit').style.display = "none";
+}
+    
+function showEditForm() {
+    document.getElementById('delayPrediction').style.display = "none";
+    document.getElementById('delayUpload').style.display = "none";
+    document.getElementById('delayEdit').style.display = "flex";
+}
+</script>
+
+<!--
+<script type="text/javascript">
+    // Initially show delay prediction form only
+    $('.delayPrediction').show();
+    $('.delayUpload, .delayEdit').hide();
+</script>
+-->
+
+<!--
+<script type="text/javascript">
+    const dropdownItems = document.querySelectorAll('.dataForm');
+    
+    dropdownItems.forEach(item => {
+        item.addEventListener('click', function(event) {
+            event.preventDefault();
+            const formType = this.getAttribute('form-type');
+            switch(formType) {
+                case 'predict':
+                    $('#delayPrediction').show();
+                    $('#delayUpload, #delayEdit').hide();
+                    break;
+                case 'upload':
+                    $('#delayUpload').show();
+                    $('#delayPrediction, #delayEdit').hide();
+                    break;
+                case 'edit':
+                    $('#delayEdit').show();
+                    $('#delayPrediction, #delayUpload').hide();
+                    break;
+            }
+        });
+    });
+    
+    //$(document).ready(function() {
+    //    // have the buttons show their form
+    //    $('#button1').click(function(){
+    //        $('#delayPrediction').show();
+    //        $('#delayUpload, #delayEdit').hide();
+    //    })
+    //    $('#button2').click(function(){
+    //        $('#b').show();
+    //    })
+    //    $('#button3').click(function(){
+    //        $('#c').show();
+    //    })
+    //});
+</script>
+-->
