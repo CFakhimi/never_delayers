@@ -158,20 +158,41 @@ def create_user(cursor, username, password):
     cursor.execute(insert_query, (username, password))
     return "Success"
 
+@db_connection
+def validate_user(cursor, username, password):
+    table_name = "users"
+
+    query = f"""
+    SELECT Password
+    FROM {table_name}
+    WHERE Username = %s
+    """
+
+    cursor.execute(query, (username))
+    stored_password = cursor.fetchone()
+    
+    if stored_password is not None:
+        stored_password = stored_password[0]
+
+    if password == stored_password:
+        return "Password is valid"
+    else:
+        return "Password is invalid"
+
 if __name__ == "__main__":
     origin = "JFK"
     destination = "SFO"
     airline = "United"
     departureDate = "2024-11-03"
-    userID = "Chris"
-    password = "12345"
+    userID = "Jack"
+    password = "Irish"
     delayMinutes = "10"
     #print(average_delay(origin, destination, airline))
     #print(insert_flight(userID, delayMinutes, airline, origin, destination, departureDate))
     delayMinutes= "12"
     #print(insert_flight(userID, delayMinutes, airline, origin, destination, departureDate))
     #print(delete_flight("Fake", "3000008"))
-    print(create_user(userID, password))
+    print(validate_user(userID, password))
 
 
 
