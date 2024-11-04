@@ -146,19 +146,32 @@ def average_delay(cursor, origin, destination, airline):
 def delay_compare(cursor, origin, destination, airline):
     pass
 
+@db_connection
+def create_user(cursor, username, password):
+    table_name = "users"
+
+    insert_query = f"""
+    INSERT INTO {table_name} (Username, Password)
+    VALUES (%s, %s)
+    """
+    
+    cursor.execute(insert_query, (username, password))
+    return "Success"
 
 if __name__ == "__main__":
     origin = "JFK"
     destination = "SFO"
     airline = "United"
     departureDate = "2024-11-03"
-    userID = "Jack"
+    userID = "Chris"
+    password = "12345"
     delayMinutes = "10"
     #print(average_delay(origin, destination, airline))
     #print(insert_flight(userID, delayMinutes, airline, origin, destination, departureDate))
     delayMinutes= "12"
     #print(insert_flight(userID, delayMinutes, airline, origin, destination, departureDate))
-    print(delete_flight("Fake", "3000008"))
+    #print(delete_flight("Fake", "3000008"))
+    print(create_user(userID, password))
 
 
 
