@@ -2,8 +2,10 @@ from flask import Flask, render_template, request, session, jsonify
 from flask import redirect, url_for # For better redirects
 from flask import flash # Quick user messages
 from backend.official_query import average_delay, insert_flight, get_user_flights
+import os
 
-app = Flask(__name__)
+app = Flask(__name__,
+            template_folder=os.path.abspath('./templates'))
 app.secret_key = 'secret_key'  # Fix at some point
 
 def query_database(inputs):
@@ -47,8 +49,12 @@ def index(): # This is the home page!!!
 
     return render_template('index.html', current_user=current_user, result=result)
 
-@app.route('/login', methods=['POST'])
+@app.route('/login', methods=['GET'])
 def login():
+    return render_template('login.html')
+
+@app.route('/login', methods=['POST'])
+def authenticate():
     username = request.form['uname']
     password = request.form['pswd']
     
@@ -66,6 +72,10 @@ def logout():
     flash('You have been logged out.')
     return redirect(url_for('index'))
 
+@app.route('/create_account', methods=['GET'])
+def register():
+    return render_template('create_account.html')
+
 @app.route('/create_account', methods=['POST'])
 def create_account():
     username = request.form['uname']
@@ -74,4 +84,4 @@ def create_account():
     return redirect(url_for('index'))
 
 if __name__ == '__main__':
-    app.run(debug=True, port="9001")
+    app.run(host='db8.cse.nd.edu', debug=True, port="5013")

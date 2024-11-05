@@ -1,36 +1,21 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8" />
-    <title>Will I Be Delayed?</title>
-    <link rel="stylesheet" href="../static/css/styles.css" />
-</head>
-<body>
-    <div class="header">
-        <h1>Will I Be Delayed?</h1>
-        <h5> By the Never_Delayers </h5>
-    </div>
-    
-    <!-- Home navigation bar -->
-    <div class="navbar"> 
-        <a href="/templates/login.html">Login</a>
-        <a href="/templates/create_account.html">Create an Account</a>
-        <div class="nav-right">
-            <p><b>User: {{ current_user }} </b><span id="currUser"></span></p>
+    <head>
+        <meta charset="UTF-8" />
+        <title>Will I Be Delayed?</title>
+        <link rel="stylesheet" href="../static/css/styles.css" />
+    </head>
+    <body>
+        <div class="header">
+            <h1>Will I Be Delayed?</h1>
         </div>
-    </div>
-    <br />
-
-    <!-- Display flash messages -->
-    {% with messages = get_flashed_messages() %}
-        {% if messages %}
-            <div class="flash-messages">
-                {% for message in messages %}
-                    <p>{{ message }}</p>
-                {% endfor %}
+        <!-- Home navigation bar -->
+        <div class="navbar"> 
+            <a href="/login" method="GET">Login</a>
+            <a href="/create_account" method="GET">Create an Account</a>
+            <div class="nav-right">
+                <p><b>User: {{current_user}}</b><p/>
             </div>
-        {% endif %}
-    {% endwith %}
 
     <div class="content">
         <!-- Dropdown for choosing which form to use -->
@@ -183,7 +168,6 @@
         document.getElementById('delayEdit').style.display = "block";
         document.getElementById('delayDelete').style.display = "none";
     }
-    
     function showDeleteForm() {
         document.getElementById('delayPrediction').style.display = "none";
         document.getElementById('delayUpload').style.display = "none";
@@ -191,3 +175,4 @@
         document.getElementById('delayDelete').style.display = "block";
     }
     </script>
+
