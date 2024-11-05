@@ -23,6 +23,16 @@
             </div>
         </div>
         <br />
+        <!-- Display flash messages -->
+        {% with messages = get_flashed_messages() %}
+            {% if messages %}
+                <div class="flash-messages">
+                    {% for message in messages %}
+                        <p>{{ message }}</p>
+                    {% endfor %}
+                </div>
+            {% endif %}
+        {% endwith %}
         <!-- Dropdown for choosing which form to use -->
         <div class="formDropdown">
             <button class="formDropdownButton">Dropdown v</button>
@@ -42,7 +52,8 @@
             </div>
         </div>
         <!-- Predict your delay form -->
-        <form class="dataInput" id="delayPrediction">
+        <form class="dataInput" id="delayPrediction" action="/" method="POST">
+            <input type="hidden" name="form_type" value="predict_delay">
             <div class="inputField">
                 <p>Want to know if you'll be delayed? Enter your flight info and we'll give you a prediction:</p>
             </div>
@@ -63,7 +74,8 @@
             </div>
         </form>
         <!-- Input flight data form -->
-        <form class="dataInput" id="delayUpload">
+        <form class="dataInput" id="delayUpload" action="/" method="POST">
+            <input type="hidden" name="form_type" value="upload_flight">
             <div class="inputField">
                 <p>Want to know if you'll be delayed? Enter your flight info and we'll give you a prediction:</p>
             </div>
@@ -98,6 +110,12 @@
         <form class="dataInput" id="delayDelete">
         </form>
         <!--<br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br />-->
+        <!-- Display the result if available -->
+        {% if result %}
+            <div class="result-section">
+                <p><strong>Result:</strong> {{ result }}</p>
+            </div>
+        {% endif %}
         <p>***Will I Be Delayed is not responsible for any missed flight compensation.</p>
     </body>
 </html>

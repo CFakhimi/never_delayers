@@ -125,7 +125,10 @@ def get_user_flights(cursor, userID):
     
 
 @db_connection
-def average_delay(cursor, origin, destination, airline): 
+def average_delay(cursor, origin, destination, airline, flight_date=None): 
+    '''
+    cursor, origin, desintation,airline
+    '''
     table_name = "flight_info"
     
     your_delay_query = f"""
