@@ -9,17 +9,13 @@
     <body>
         <div class="header">
             <h1>Will I Be Delayed?</h1>
-            <!--
-            Display the current user, should have a default "Not logged in" 
-            <h5>Current User: <span id="currUser"></span></h5>
-            -->
         </div>
         <!-- Home navigation bar -->
         <div class="navbar"> 
-            <a href="/templates/login.html">Login</a>
-            <a href="/templates/create_account.html">Create an Account</a>
+            <a href="/login" method="GET">Login</a>
+            <a href="/create_account" method="GET">Create an Account</a>
             <div class="nav-right">
-                <p><b>User: </b><span id="currUser"></span><p/>
+                <p><b>User: {{current_user}}</b><p/>
             </div>
         </div>
         <br />

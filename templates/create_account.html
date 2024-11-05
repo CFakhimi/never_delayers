@@ -9,7 +9,7 @@
             <h1>Create Your Account:</h1>
         </div>
         <div class="loginStuff">
-            <form action="create_account.py" class="accountInfo">
+            <form action="/create_account" method="POST" class="accountInfo">
                 <label for="uname"><b>Username:</b></label>
                 <input type="text" placeholder="Enter Username" name="uname" required>
                 <label for="pswd"><b>Password:</b></label>
@@ -18,7 +18,7 @@
                 <input type="password" placeholder="Enter Password" name="pswdConfirm" required>
                 <button type="submit">Login</button>
             </form>
-            <form action="/templates/index.html" class="return">
+            <form action="/" method="GET" class="return">
                 <button type="submit">Cancel</button>
             </form>
         </div>
