@@ -1,0 +1,98 @@
+* {
+    box-sizing: border-box;
+}
+
+html, body {
+    margin: 0;
+    padding: 0;
+    height: 100%;
+}
+
+body {
+    display: flex;
+    flex-direction: column;
+}
+
+.header {
+    margin: 0;
+    padding: 5px;
+    width: 100%;
+    text-align: center;
+    background-color: peachpuff;
+    border-bottom: 3px solid black;
+    color: cadetblue;
+    font-size: 20px;
+}
+
+/*** Login Stuff ***/
+
+.accountInfo, .return {
+    margin-left: auto;
+    margin-right: auto;
+    display: block;
+    text-align: center;
+}
+
+button[type=submit] {
+    background-color: #04AA6D; /* Green submit buttons */
+    color: white;
+    padding: 12px 20px;
+    margin: 8px 0;
+    border: none;
+    cursor: pointer;
+    width: auto;
+}
+
+label {
+    text-align: right;
+    float: left;
+    clear: both;
+    height: 20px;
+    width: 200px;
+    margin-top: 10px;
+    margin-bottom: 10px;
+    margin-right: 15px;
+    padding: 12px 20px;
+}
+
+.loginStuff input {
+    float: left;
+    border: 1px solid black;
+    margin: 10px 10px;
+    padding: 12px 20px;
+    display: inline-block;
+    box-sizing: border-box;
+    width: 50%;
+}
+
+/* add opacity to hovering over buttons */
+button:hover {
+    opacity: 0.8;
+}
+
+/* Settings for the cancel/return button */
+/*button[name="cancelbtn"] {*/
+.return button {
+    width: auto;
+    padding: 12px 20px;
+    background-color: #f44336; /* Red button */
+    color: white;
+}
+
+
+
+/* Add Zoom Animation */
+.animate {
+    -webkit-animation: animatezoom 0.6s;
+    animation: animatezoom 0.6s
+}
+
+@-webkit-keyframes animatezoom {
+    from {-webkit-transform: scale(0)}
+    to {-webkit-transform: scale(1)}
+}
+
+@keyframes animatezoom {
+    from {transform: scale(0)}
+    to {transform: scale(1)}
+}

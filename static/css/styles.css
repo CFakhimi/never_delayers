@@ -1,0 +1,174 @@
+* {
+    box-sizing: border-box;
+}
+
+html, body {
+    scroll-behavior: smooth;
+    margin: 0;
+    padding: 0;
+    height: 100%;
+}
+
+body {
+    display: flex;
+    flex-direction: column;
+}
+
+.header {
+    margin: 0;
+    padding: 5px;
+    width: 100%;
+    text-align: center;
+    background-color: peachpuff;
+    /*border-bottom: 1px solid black;*/
+    color: cadetblue;
+    font-size: 20px;
+}
+
+/* add opacity to hovering over buttons */
+button:hover {
+    opacity: 80%
+}
+
+/*** Navbar Stuff ***/
+
+.navbar {
+    overflow: hidden;
+    background-color: dimgray;
+    border-top: 2px solid black;
+    border-bottom: 2px solid black;
+}
+
+.navbar a {
+    float:left;
+    font-size: 18px;
+    color: white;
+    text-align: center;
+    padding: 14px 16px;
+    text-decoration: none;
+}
+
+.navbar a:hover {
+    background-color: red;
+}
+
+.nav-right {
+    float: right;
+    margin-right: 20px;
+    padding-left: 10px;
+    padding-right: 10px;
+    color: white;
+}
+
+/*** Dropdown Menu Stuff ***/
+
+/* Dropdown container */
+.formDropdown {
+    display: block;
+    float: none;
+    overflow: hidden;
+    align-content: center;
+    text-align: center;
+    justify-content: center;
+}
+
+/* Dropdown button */
+.formDropdown .formDropdownButton {
+    width: 200px;
+    background-color: green;
+    color: white;
+    padding: 14px 16px;
+    font-size: 18px;
+    font-family: inherit;
+    margin: 0;
+    border: 2px solid black;
+}
+
+/* Dropdown content */
+.formDropdownContent {
+    scroll-behavior: smooth;
+    display: none;
+    justify-content: center;
+    align-content: center;
+    position: relative;
+    background-color: aliceblue;
+    min-width: 160px;
+    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+    z-index: 1;
+}
+
+/* Dropdown links */
+.formDropdownContent a {
+    float: none;
+    color: black;
+    padding: 12px 16px;
+    text-decoration: none;
+    display: block;
+    text-align: center;
+}
+
+/* Show links on hover */
+.formDropdown:hover .formDropdownContent {
+    display: block;
+}
+
+/* Change color of dropdown links on hover */
+.formDropdownContent a:hover {
+    background-color: red;
+}
+
+/*** Form Stuff ***/
+.dataInput {
+    display: none;
+    float: none;
+    padding: 12px 20px;
+    margin-left: auto;
+    margin-right: auto;
+    text-align: left;
+    overflow: scroll;
+}
+
+.dataInput input {
+    display: block;
+    margin: auto;
+    margin-top: 10px;
+    margin-bottom: 10px;
+    text-align: center;
+    align-content: center;
+    justify-content: center;
+    border: 1px solid black;
+    padding: 12px 20px;
+    box-sizing: border-box;
+    width: 400px;
+}
+
+.dataInput button[type="submit"] {
+    display: block;
+    margin: auto;
+    background-color: dodgerblue;
+    text-align: center;
+    align-content: center;
+    justify-content: center;
+    border: 1px solid black;
+    padding: 12px 20px;
+    box-sizing: border-box;
+    width: 200px;
+}
+
+
+
+/* Add Zoom Animation */
+.animate {
+    -webkit-animation: animatezoom 0.6s;
+    animation: animatezoom 0.6s
+}
+
+@-webkit-keyframes animatezoom {
+    from {-webkit-transform: scale(0)}
+    to {-webkit-transform: scale(1)}
+}
+
+@keyframes animatezoom {
+    from {transform: scale(0)}
+    to {transform: scale(1)}
+}
