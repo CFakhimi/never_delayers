@@ -1,7 +1,7 @@
 from flask import Flask, render_template, request, session, jsonify
 from flask import redirect, url_for # For better redirects
 from flask import flash # Quick user messages
-from backend.official_query import average_delay, insert_flight, get_user_flights
+from backend.official_query import average_delay, insert_flight, get_user_flights, delete_flight, edit_flight
 import os
 
 app = Flask(__name__,
@@ -15,6 +15,9 @@ def query_database(inputs):
 @app.route('/', methods=['POST', 'GET'])
 def index(): # This is the home page!!!
     current_user = session.get('username', 'Not logged in')
+    userID = "Jack"
+    user_flights = get_user_flights(userID=userID)
+    #print(user_flights)
     result = None
     # Add post request here
     # This will query the database and return it
@@ -32,9 +35,7 @@ def index(): # This is the home page!!!
             #flash(f'Prediction: The average delay for this flight is {result}.')
 
         elif form_type == 'upload_flight':
-            # Extract parameters for uploading flight details
             #userID = request.form.get('userID')
-            userID = "Jack"
             delayMinutes = request.form.get('delayMinutes')
             origin = request.form.get('origin')
             destination = request.form.get('destination')
@@ -47,7 +48,28 @@ def index(): # This is the home page!!!
                 result = "Added flight successfully!"
             #flash(f'Upload Status: {upload_status}')
 
-    return render_template('index.html', current_user=current_user, result=result)
+        elif form_type == 'delete_flight':
+            flight_id = request.form.get('flight_id')
+            delete_status = delete_flight(userID, flight_id)
+            if delete_status == "Success":
+                result = f"Flight ID {flight_id} deleted successfully."
+            else:
+                result = f"Failed to delete Flight ID {flight_id}."
+            return redirect(url_for('index'))
+
+        elif form_type == 'edit_flight':
+            flight_id = request.form.get('flight_id')
+            attribute = request.form.get('attribute')
+            new_value = request.form.get('new_value')
+
+            edit_status = edit_flight(flight_id, attribute, new_value)
+            if edit_status == "Success":
+                result = f"Flight ID {flight_id} edited successfully."
+            else:
+                result = f"Failed to edit Flight ID {flight_id}."
+            return redirect(url_for('index'))
+
+    return render_template('index.html', current_user=current_user, result=result, user_flights=user_flights)
 
 @app.route('/login', methods=['GET'])
 def login():

@@ -110,17 +110,22 @@ def get_user_flights(cursor, userID):
     if flight_ids == ():
         return "None"
     flight_ids = [str(t[0]) for t in flight_ids]
-    ids_string = ', '.join(flight_ids)
+
+    # Create a query with placeholders for the IDs
+    placeholders = ', '.join(['%s'] * len(flight_ids))
     table_name = "flight_info"
-    
-    #? May need to add more detail to the query
     your_flights_query = f"""
-    SELECT Origin, Destination, Airline
+    SELECT FlightID, Airline, Origin, Destination, DepartureDate, DelayMinutes
     FROM {table_name}
-    WHERE FlightID IN %s
+    WHERE FlightID IN ({placeholders})
     """
-    cursor.execute(your_flights_query, (ids_string,))
+
+    # Execute the query with the flight IDs as parameters
+    cursor.execute(your_flights_query, tuple(flight_ids))
     your_flights = cursor.fetchall()
+    flight_keys = ['id', 'airline', 'origin', 'destination', 'departure_date', 'delay_minutes']
+    your_flights = [dict(zip(flight_keys, flight)) for flight in your_flights]
+
     return your_flights
     
 
