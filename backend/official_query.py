@@ -153,6 +153,18 @@ def delay_compare(cursor, origin, destination, airline):
 def create_user(cursor, username, password):
     table_name = "users"
 
+    username_query = f"""
+    SELECT 1
+    FROM {table_name}
+    WHERE Username = %s
+    """
+
+    cursor.execute(username_query, (username))
+    user = cursor.fetchall()
+
+    if user != ():
+        return "Username already taken"
+
     insert_query = f"""
     INSERT INTO {table_name} (Username, Password)
     VALUES (%s, %s)
@@ -187,15 +199,16 @@ if __name__ == "__main__":
     destination = "SFO"
     airline = "United"
     departureDate = "2024-11-03"
-    userID = "Jack"
-    password = "Irish"
+    userID = "Alex"
+    password = "dAtAbAses"
     delayMinutes = "10"
     #print(average_delay(origin, destination, airline))
     #print(insert_flight(userID, delayMinutes, airline, origin, destination, departureDate))
     delayMinutes= "12"
     #print(insert_flight(userID, delayMinutes, airline, origin, destination, departureDate))
     #print(delete_flight("Fake", "3000008"))
-    print(validate_user(userID, password))
+    #print(validate_user(userID, password))
+    print(create_user(userID, password))
 
 
 
