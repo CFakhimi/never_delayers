@@ -14,120 +14,120 @@
             <h5>Current User: <span id="currUser"></span></h5>
             -->
         </div>
+        <!-- Home navigation bar -->
         <div class="navbar"> 
             <a href="/templates/login.html">Login</a>
-            <a href="/templates/user_creation.html">Create an Account</a>
+            <a href="/templates/create_account.html">Create an Account</a>
             <div class="nav-right">
                 <p><b>User: </b><span id="currUser"></span><p/>
             </div>
         </div>
         <br />
+        <!-- Dropdown for choosing which form to use -->
         <div class="formDropdown">
-                <button class="formDropdownButton">Dropdown</button>
-                <div class="formDropdownContent">
-                    <a href="#" class="dataForm" form-type="predict" onclick="showPredictionForm()">
-                        Predict My Delay
-                    </a>
-                    <a href="#" class="dataForm" form-type="upload" onclick="showUploadForm()">
-                        Just Landed? -- Upload My Flight
-                    </a>
-                    <a href="#" class="dataForm" form-type="edit" onclick="showEditForm()">
-                        Edit My Uploaded Flights
-                    </a>
-                </div>
+            <button class="formDropdownButton">Dropdown v</button>
+            <div class="formDropdownContent">
+                <a href="#" class="dataForm" form-type="predict" onclick="showPredictionForm()">
+                    Predict My Delay
+                </a>
+                <a href="#" class="dataForm" form-type="upload" onclick="showUploadForm()">
+                    Just Landed? -- Upload My Flight
+                </a>
+                <a href="#" class="dataForm" form-type="edit" onclick="showEditForm()">
+                    Edit My Uploaded Flights
+                </a>
+                <a href="#" class="dataForm" form-type="delete" onclick="showDeleteForm()">
+                    Delete An Uploaded Flights
+                </a>
             </div>
-        <p>***Will I Be Delayed is not responsible for any missed flight compensation.</p>
+        </div>
+        <!-- Predict your delay form -->
         <form class="dataInput" id="delayPrediction">
-            <div>
+            <div class="inputField">
                 <p>Want to know if you'll be delayed? Enter your flight info and we'll give you a prediction:</p>
             </div>
-            <div>
-                <label for="airline"><b>Airline (do not abbreviate):</b></label>
-                <input type="text" placeholder="Enter Username" name="uname" required>
+            <div class="inputField">
+                <!--<label for="airline"><b>Airline (do not abbreviate):</b></label>-->
+                <input type="text" placeholder="Enter Airline" name="airline" required>
+            </div>
+            <div class="inputField">
+                <!--<label for="origin"><b>Origin Airport:</b></label>-->
+                <input type="text" placeholder="Enter Origin Airport" name="origin" required>
+            </div>
+            <div class="inputField">
+                <!--<label for="pswd"><b>Destination Airport:</b></label>-->
+                <input type="text" placeholder="Enter Destination Airport" name="destination" required>
             </div>
             <div>
-                <label for="origin"><b>Origin Airport:</b></label>
-                <input type="text" placeholder="Enter Username" name="uname" required>
+                <button type="submit">Predict</button>
             </div>
-            <div>
-                <label for="pswd"><b>Destination Airport:</b></label>
-                <input type="text" placeholder="Enter Password" name="pswd" required>
-            </div>
-            <button type="submit">Predict</button>
         </form>
+        <!-- Input flight data form -->
         <form class="dataInput" id="delayUpload">
-            <p>Test 2</p>
+            <div class="inputField">
+                <p>Want to know if you'll be delayed? Enter your flight info and we'll give you a prediction:</p>
+            </div>
+            <div class="inputField">
+                <!--<label for="airline"><b>Airline (do not abbreviate):</b></label>-->
+                <input type="text" placeholder="Enter Airline" name="airline" required>
+            </div>
+            <div class="inputField">
+                <!--<label for="origin"><b>Origin Airport:</b></label>-->
+                <input type="text" placeholder="Enter Origin Airport" name="origin" required>
+            </div>
+            <div class="inputField">
+                <!--<label for="pswd"><b>Destination Airport:</b></label>-->
+                <input type="text" placeholder="Enter Destination Airport" name="destination" required>
+            </div>
+            <div class="inputField">
+                <!--<label for="pswd"><b>Destination Airport:</b></label>-->
+                <input type="text" placeholder="Enter Departure Date" name="departureDate" required>
+            </div>
+            <div class="inputField">
+                <!--<label for="pswd"><b>Destination Airport:</b></label>-->
+                <input type="text" placeholder="Enter Delay in Minutes" name="delayMinutes" required>
+            </div>
+            <div>
+                <button type="submit">Upload Data</button>
+            </div>
         </form>
+        <!-- Edit your uploaded flights form -->
         <form class="dataInput" id="delayEdit">
         </form>
+        <!-- Delete an uploaded flights form -->
+        <form class="dataInput" id="delayDelete">
+        </form>
+        <!--<br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br />-->
+        <p>***Will I Be Delayed is not responsible for any missed flight compensation.</p>
     </body>
 </html>
 
 <script>
 function showPredictionForm() {
-    document.getElementById('delayPrediction').style.display = "flex";
+    document.getElementById('delayPrediction').style.display = "block";
     document.getElementById('delayUpload').style.display = "none";
     document.getElementById('delayEdit').style.display = "none";
+    document.getElementById('delayDelete').style.display = "none";
 }
     
 function showUploadForm() {
     document.getElementById('delayPrediction').style.display = "none";
-    document.getElementById('delayUpload').style.display = "flex";
+    document.getElementById('delayUpload').style.display = "block";
     document.getElementById('delayEdit').style.display = "none";
+    document.getElementById('delayDelete').style.display = "none";
 }
     
 function showEditForm() {
     document.getElementById('delayPrediction').style.display = "none";
     document.getElementById('delayUpload').style.display = "none";
-    document.getElementById('delayEdit').style.display = "flex";
+    document.getElementById('delayEdit').style.display = "block";
+    document.getElementById('delayDelete').style.display = "none";
+}
+    
+function showDeleteForm() {
+    document.getElementById('delayPrediction').style.display = "none";
+    document.getElementById('delayUpload').style.display = "none";
+    document.getElementById('delayEdit').style.display = "none";
+    document.getElementById('delayDelete').style.display = "block";
 }
 </script>
-
-<!--
-<script type="text/javascript">
-    // Initially show delay prediction form only
-    $('.delayPrediction').show();
-    $('.delayUpload, .delayEdit').hide();
-</script>
--->
-
-<!--
-<script type="text/javascript">
-    const dropdownItems = document.querySelectorAll('.dataForm');
-    
-    dropdownItems.forEach(item => {
-        item.addEventListener('click', function(event) {
-            event.preventDefault();
-            const formType = this.getAttribute('form-type');
-            switch(formType) {
-                case 'predict':
-                    $('#delayPrediction').show();
-                    $('#delayUpload, #delayEdit').hide();
-                    break;
-                case 'upload':
-                    $('#delayUpload').show();
-                    $('#delayPrediction, #delayEdit').hide();
-                    break;
-                case 'edit':
-                    $('#delayEdit').show();
-                    $('#delayPrediction, #delayUpload').hide();
-                    break;
-            }
-        });
-    });
-    
-    //$(document).ready(function() {
-    //    // have the buttons show their form
-    //    $('#button1').click(function(){
-    //        $('#delayPrediction').show();
-    //        $('#delayUpload, #delayEdit').hide();
-    //    })
-    //    $('#button2').click(function(){
-    //        $('#b').show();
-    //    })
-    //    $('#button3').click(function(){
-    //        $('#c').show();
-    //    })
-    //});
-</script>
--->
