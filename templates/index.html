@@ -51,7 +51,7 @@
                     <h3>Want to know if you'll be delayed? Enter your flight info and we'll give you a prediction:</h3>
                 </div>
                 <div class="inputField">
-                    <input type="text" placeholder="Enter Airline" name="airline" required>
+                    <input type="text" maxlength="255" placeholder="Enter Airline" name="airline" required>
                 </div>
                 <div class="inputField">
                     <input type="text" maxlength="3" placeholder="Enter Origin Airport" name="origin" required>
@@ -74,7 +74,7 @@
                     <h3>Just Landed? Upload your flight details below:</h3>
                 </div>
                 <div class="inputField">
-                    <input type="text" placeholder="Enter Airline" name="airline" required>
+                    <input type="text" maxlength="255" placeholder="Enter Airline" name="airline" required>
                 </div>
                 <div class="inputField">
                     <input type="text" maxlength="3" placeholder="Enter Origin Airport" name="origin" required>
@@ -86,7 +86,7 @@
                     <input type="date" name="departureDate" required>
                 </div>
                 <div class="inputField">
-                    <input type="number" step="any" placeholder="Enter Delay in Minutes" name="delayMinutes" required>
+                    <input type="number" placeholder="Enter Delay in Minutes" name="delayMinutes" required>
                 </div>
                 <div>
                     <button type="submit">Upload Data</button>
@@ -100,20 +100,22 @@
                     <ul>
                         {% for flight in user_flights %}
                             <li>
-                                Flight ID: {{ flight.id }}, Origin: {{ flight.origin }}, Destination: {{ flight.destination }}, Date: {{ flight.departure_date }}
+                                Flight ID: {{ flight.id }}, Airline: {{flight.airline}}, Origin: {{ flight.origin }}, Destination: {{ flight.destination }}, Date: {{ flight.departure_date }}, Delay: {{flight.delay_minutes}} minutes
+                                <br>
                                 <form action="/" method="POST" style="display: inline;">
                                     <input type="hidden" name="form_type" value="edit_flight">
                                     <input type="hidden" name="flight_id" value="{{ flight.id }}">
                                     <label for="attribute">Attribute to Edit:</label>
                                     <select name="attribute" id="attributeSelection" onchange="getInputType()">
+                                        <option value="Airline">Airline</option>
                                         <option value="Origin">Origin</option>
                                         <option value="Destination">Destination</option>
                                         <option value="DepartureDate">Departure Date</option>
                                         <option value="DelayMinutes">Delay Minutes</option>
                                     </select>
                                     <label for="new_value">New Value:</label>
-                                    <div id="editInputContainer">
-                                        <input type='text' maxlength='3' name='new_value' placeholder='Enter new origin airport' required>
+                                    <div id="editInputContainer" style="display: inline">
+                                        <input type='text' maxlength='255' name='new_value' placeholder='Enter new airline' required>
                                     </div>
                                     <button type="submit">Edit</button>
                                 </form>
@@ -208,6 +210,9 @@
         inputContainer.innerHTML = "";
         const inputType = document.getElementById("attributeSelection").value;
         switch (inputType) {
+            case "Airline":
+                inputContainer.innerHTML = "<input type='text' maxlength='255' name='new_value' placeholder='Enter new airline' required>";
+                break;
             case "Origin":
                 inputContainer.innerHTML = "<input type='text' maxlength='3' name='new_value' placeholder='Enter new origin airport' required>";
                 break;
@@ -218,7 +223,7 @@
                 inputContainer.innerHTML = "<input type='date' name='new_value' required>";
                 break;
             case "DelayMinutes":
-                inputContainer.innerHTML = "<input type='number' stpe='any' name='new_value' required>";
+                inputContainer.innerHTML = "<input type='number' name='new_value' required>";
                 break;
         }
     }     

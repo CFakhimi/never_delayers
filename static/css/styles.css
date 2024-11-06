@@ -154,6 +154,32 @@ button:hover {
     width: 200px;
 }
 
+/* Extra styles for edit form */
+.dataInput[id="delayEdit"] .form {
+    display: inline-block;
+}
+
+.dataInput[id="delayEdit"] label {
+    display: inline-block;
+}
+
+.dataInput[id="delayEdit"] select {
+    display: inline-block;
+    margin-right: 12px;
+}
+
+.dataInput[id="delayEdit"] input {
+    display: inline-block;
+    width: auto;
+    margin-right: 12px;
+}
+
+.dataInput[id="delayEdit"] button {
+    width: auto;
+    display: inline;
+    margin-bottom: 30px;
+}
+
 /* Have delete buttons inline with each data entry */
 .deleteButton {
     display: inline-block;
