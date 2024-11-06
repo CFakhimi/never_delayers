@@ -22,9 +22,9 @@ body {
     padding: 5px;
     width: 100%;
     text-align: center;
-    background-color: peachpuff;
+    background-color: #565e9d; 
     /*border-bottom: 1px solid black;*/
-    color: cadetblue;
+    color: #9df2d3;
     font-size: 20px;
 }
 
@@ -36,7 +36,6 @@ button:hover {
 /*** Navbar Stuff ***/
 
 .navbar {
-    overflow: hidden;
     background-color: dimgray;
     border-top: 2px solid black;
     border-bottom: 2px solid black;
@@ -69,10 +68,10 @@ button:hover {
 .formDropdown {
     display: block;
     float: none;
-    overflow: hidden;
     align-content: center;
     text-align: center;
     justify-content: center;
+    margin-top: 20px;
 }
 
 /* Dropdown button */
@@ -110,11 +109,6 @@ button:hover {
     text-align: center;
 }
 
-/* Show links on hover */
-.formDropdown:hover .formDropdownContent {
-    display: block;
-}
-
 /* Change color of dropdown links on hover */
 .formDropdownContent a:hover {
     background-color: red;
@@ -128,7 +122,6 @@ button:hover {
     margin-left: auto;
     margin-right: auto;
     text-align: left;
-    overflow: scroll;
 }
 
 .dataInput input {
@@ -157,6 +150,7 @@ button:hover {
     box-sizing: border-box;
     width: 200px;
 }
+
 .footer {
     text-align: center;
     padding: 10px;
