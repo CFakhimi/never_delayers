@@ -121,6 +121,8 @@ button:hover {
     padding: 12px 20px;
     margin-left: auto;
     margin-right: auto;
+    margin-top: 10px;
+    margin-bottom: 10px;
     text-align: left;
 }
 
@@ -141,6 +143,7 @@ button:hover {
 .dataInput button[type="submit"] {
     display: block;
     margin: auto;
+    margin-bottom: 12px;
     background-color: dodgerblue;
     text-align: center;
     align-content: center;
@@ -149,6 +152,11 @@ button:hover {
     padding: 12px 20px;
     box-sizing: border-box;
     width: 200px;
+}
+
+/* Have delete buttons inline with each data entry */
+.deleteButton {
+    display: inline-block;
 }
 
 .footer {

@@ -1,7 +1,7 @@
 from flask import Flask, render_template, request, session, jsonify
 from flask import redirect, url_for # For better redirects
 from flask import flash # Quick user messages
-from backend.official_query import average_delay, insert_flight, get_user_flights, delete_flight, edit_flight
+from backend.official_query import average_delay, insert_flight, get_user_flights, delete_flight, edit_flight, validate_user, create_user
 import os
 
 app = Flask(__name__,
@@ -14,8 +14,7 @@ def query_database(inputs):
 
 @app.route('/', methods=['POST', 'GET'])
 def index(): # This is the home page!!!
-    current_user = session.get('username', 'Not logged in')
-    userID = "Jack"
+    userID = session.get('username', 'Not logged in')
     user_flights = get_user_flights(userID=userID)
     #print(user_flights)
     result = None
@@ -69,7 +68,7 @@ def index(): # This is the home page!!!
                 result = f"Failed to edit Flight ID {flight_id}."
             return redirect(url_for('index'))
 
-    return render_template('index.html', current_user=current_user, result=result, user_flights=user_flights)
+    return render_template('index.html', userID=userID, result=result, user_flights=user_flights)
 
 @app.route('/login', methods=['GET'])
 def login():
@@ -80,7 +79,8 @@ def authenticate():
     username = request.form['uname']
     password = request.form['pswd']
     
-    if username == 'user' and password == 'password':  
+    userStatus = validate_user(username=username, password=password)
+    if userStatus == "Password is valid":  
         session['username'] = username
         flash('Login successful!')
         return redirect(url_for('index'))
@@ -102,7 +102,17 @@ def register():
 def create_account():
     username = request.form['uname']
     password = request.form['pswd']
-    flash('Account created successfully. Please log in.')
+    passwordConfirm = request.form['pswdConfirm']
+
+    # create_user internally checks if user already exists
+    if password == passwordConfirm:
+        newUserStatus = create_user(username=username, password=password)
+        if newUserStatus == "Success":
+            flash('Account created successfully. Please log in.')
+        else:
+            flash('Account not created. Username already exists.')
+    else:
+        flash('Account not created. Passwords did not match.')
     return redirect(url_for('index'))
 
 if __name__ == '__main__':

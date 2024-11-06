@@ -108,7 +108,7 @@ def get_user_flights(cursor, userID):
     cursor.execute(id_query, (userID,))
     flight_ids = cursor.fetchall()
     if flight_ids == ():
-        return "None"
+        return None
     flight_ids = [str(t[0]) for t in flight_ids]
 
     # Create a query with placeholders for the IDs
