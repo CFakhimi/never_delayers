@@ -26,6 +26,10 @@ def db_connection(func):
 
 @db_connection
 def insert_flight(cursor, userID, delayMinutes, airline, origin, destination, departureDate, flightNumber=None, scheduledDepartureTime=None, scheduledArrivalTime=None, actualArrivalTime=None):
+    # If user does not exist, fail
+    if check_user_existence(userID) == False:
+        return "User DNE"
+    
     table_name = "flight_info"
     query = f"""
     INSERT INTO {table_name} (DelayMinutes, Airline, Origin, Destination, DepartureDate)
@@ -154,8 +158,9 @@ def average_delay(cursor, origin, destination, airline, flight_date=None):
 def delay_compare(cursor, origin, destination, airline):
     pass
 
+# Returns True if user exists, false if user does not exist
 @db_connection
-def create_user(cursor, username, password):
+def check_user_existence(cursor, username):
     table_name = "users"
 
     username_query = f"""
@@ -163,11 +168,22 @@ def create_user(cursor, username, password):
     FROM {table_name}
     WHERE Username = %s
     """
-
+    
     cursor.execute(username_query, (username))
     user = cursor.fetchall()
+    if user == ():
+        print("User DNE")
+        return False
+    else:
+        print("User exists")
+        return True
 
-    if user != ():
+# Create a new user if they do not already exist
+@db_connection
+def create_user(cursor, username, password):
+    table_name = "users"
+
+    if check_user_existence == True:
         return "Username already taken"
 
     insert_query = f"""
@@ -178,8 +194,12 @@ def create_user(cursor, username, password):
     cursor.execute(insert_query, (username, password))
     return "Success"
 
+# Check that on attempted login, the username exists and the password is correct
 @db_connection
 def validate_user(cursor, username, password):
+    if check_user_existence(username) == False:
+        return "User DNE"
+    
     table_name = "users"
 
     query = f"""

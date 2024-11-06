@@ -40,12 +40,16 @@ def index(): # This is the home page!!!
             destination = request.form.get('destination')
             departureDate = request.form.get('departureDate')
             airline = request.form.get('airline')
-
+            
             # Call the upload function
             upload_status = insert_flight(userID, delayMinutes, airline, origin, destination, departureDate)
             if upload_status == "Success":
                 result = "Added flight successfully!"
+            elif upload_status == "User DNE":
+                result = "Please log in to add a flight."
+            flash(result)
             #flash(f'Upload Status: {upload_status}')
+            return redirect(url_for('index'))
 
         elif form_type == 'delete_flight':
             flight_id = request.form.get('flight_id')
@@ -54,6 +58,7 @@ def index(): # This is the home page!!!
                 result = f"Flight ID {flight_id} deleted successfully."
             else:
                 result = f"Failed to delete Flight ID {flight_id}."
+            flash(result)
             return redirect(url_for('index'))
 
         elif form_type == 'edit_flight':
@@ -62,10 +67,11 @@ def index(): # This is the home page!!!
             new_value = request.form.get('new_value')
 
             edit_status = edit_flight(flight_id, attribute, new_value)
-            if edit_status == "Success":
+            if edit_status == "Updated table":
                 result = f"Flight ID {flight_id} edited successfully."
             else:
                 result = f"Failed to edit Flight ID {flight_id}."
+            flash(result)
             return redirect(url_for('index'))
 
     return render_template('index.html', userID=userID, result=result, user_flights=user_flights)
