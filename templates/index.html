@@ -134,7 +134,7 @@
                     <ul>
                         {% for flight in user_flights %}
                             <li>
-                                Flight ID: {{ flight.id }}, Origin: {{ flight.origin }}, Destination: {{ flight.destination }}, Date: {{ flight.departure_date }}
+                                Flight ID: {{ flight.id }}, Airline: {{ flight.airline }}, Origin: {{ flight.origin }}, Destination: {{ flight.destination }}, Date: {{ flight.departure_date }}
                                 <form action="/" method="POST" style="display: inline;">
                                     <input type="hidden" name="form_type" value="delete_flight">
                                     <input type="hidden" name="flight_id" value="{{ flight.id }}">
