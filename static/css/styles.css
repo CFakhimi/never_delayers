@@ -22,9 +22,9 @@ body {
     padding: 5px;
     width: 100%;
     text-align: center;
-    background-color: peachpuff;
+    background-color: #565e9d; 
     /*border-bottom: 1px solid black;*/
-    color: cadetblue;
+    color: #9df2d3;
     font-size: 20px;
 }
 
@@ -36,7 +36,6 @@ button:hover {
 /*** Navbar Stuff ***/
 
 .navbar {
-    overflow: hidden;
     background-color: dimgray;
     border-top: 2px solid black;
     border-bottom: 2px solid black;
@@ -69,10 +68,10 @@ button:hover {
 .formDropdown {
     display: block;
     float: none;
-    overflow: hidden;
     align-content: center;
     text-align: center;
     justify-content: center;
+    margin-top: 20px;
 }
 
 /* Dropdown button */
@@ -110,11 +109,6 @@ button:hover {
     text-align: center;
 }
 
-/* Show links on hover */
-.formDropdown:hover .formDropdownContent {
-    display: block;
-}
-
 /* Change color of dropdown links on hover */
 .formDropdownContent a:hover {
     background-color: red;
@@ -127,8 +121,9 @@ button:hover {
     padding: 12px 20px;
     margin-left: auto;
     margin-right: auto;
+    margin-top: 10px;
+    margin-bottom: 10px;
     text-align: left;
-    overflow: scroll;
 }
 
 .dataInput input {
@@ -148,6 +143,7 @@ button:hover {
 .dataInput button[type="submit"] {
     display: block;
     margin: auto;
+    margin-bottom: 12px;
     background-color: dodgerblue;
     text-align: center;
     align-content: center;
@@ -157,6 +153,38 @@ button:hover {
     box-sizing: border-box;
     width: 200px;
 }
+
+/* Extra styles for edit form */
+.dataInput[id="delayEdit"] .form {
+    display: inline-block;
+}
+
+.dataInput[id="delayEdit"] label {
+    display: inline-block;
+}
+
+.dataInput[id="delayEdit"] select {
+    display: inline-block;
+    margin-right: 12px;
+}
+
+.dataInput[id="delayEdit"] input {
+    display: inline-block;
+    width: auto;
+    margin-right: 12px;
+}
+
+.dataInput[id="delayEdit"] button {
+    width: auto;
+    display: inline;
+    margin-bottom: 30px;
+}
+
+/* Have delete buttons inline with each data entry */
+.deleteButton {
+    display: inline-block;
+}
+
 .footer {
     text-align: center;
     padding: 10px;

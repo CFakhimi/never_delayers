@@ -14,140 +14,169 @@
             <a href="/login" method="GET">Login</a>
             <a href="/create_account" method="GET">Create an Account</a>
             <div class="nav-right">
-                <p><b>User: {{current_user}}</b><p/>
-            </div>
-
-    <div class="content">
-        <!-- Dropdown for choosing which form to use -->
-        <div class="formDropdown">
-            <button class="formDropdownButton">
-                Options <span class="arrow">&#9662;</span>
-            </button>
-            <div class="formDropdownContent">
-                <a href="#" class="dataForm" form-type="predict" onclick="showPredictionForm()">Predict My Delay</a>
-                <a href="#" class="dataForm" form-type="upload" onclick="showUploadForm()">Just Landed? -- Upload My Flight</a>
-                <a href="#" class="dataForm" form-type="edit" onclick="showEditForm()">Edit My Uploaded Flights</a>
-                <a href="#" class="dataForm" form-type="delete" onclick="showDeleteForm()">Delete An Uploaded Flight</a>
+                <p><b>User: {{userID}}</b><p/>
             </div>
         </div>
+        
+        <div class="flashedMessageSection">
+            {% with messages = get_flashed_messages() %}
+                {% if messages %}
+                    <ul class=flashes>
+                        {% for message in messages %}
+                            <li>{{ message }}</li>
+                        {% endfor %}
+                    </ul>
+                {% endif %}
+            {% endwith %}
+        </div>
 
-        <!-- Predict your delay form -->
-        <form class="dataInput" id="delayPrediction" action="/" method="POST" style="display: none;">
-            <input type="hidden" name="form_type" value="predict_delay">
-            <div class="inputField">
-                <h3>Want to know if you'll be delayed? Enter your flight info and we'll give you a prediction:</h3>
+        <div class="content">
+            <!-- Dropdown for choosing which form to use -->
+            <div class="formDropdown">
+                <button class="formDropdownButton" onmouseover="showDropdown()" onmouseout="hideDropdown()">
+                    Options <span class="arrow">&#9662;</span>
+                </button>
+                <div class="formDropdownContent" id="formSelect" onmouseover="showDropdown()" onmouseout="hideDropdown()">
+                    <a href="#" class="dataForm" form-type="predict" onclick="showPredictionForm()">Predict My Delay</a>
+                    <a href="#" class="dataForm" form-type="upload" onclick="showUploadForm()">Just Landed? -- Upload My Flight</a>
+                    <a href="#" class="dataForm" form-type="edit" onclick="showEditForm()">Edit My Uploaded Flights</a>
+                    <a href="#" class="dataForm" form-type="delete" onclick="showDeleteForm()">Delete An Uploaded Flight</a>
+                </div>
             </div>
-            <div class="inputField">
-                <input type="text" placeholder="Enter Airline" name="airline" required>
-            </div>
-            <div class="inputField">
-                <input type="text" placeholder="Enter Origin Airport" name="origin" required>
-            </div>
-            <div class="inputField">
-                <input type="text" placeholder="Enter Destination Airport" name="destination" required>
-            </div>
-            <div class="inputField">
-                <input type="date" placeholder="Enter Flight Date" name="flight_date" required>
-            </div>
-            <div>
-                <button type="submit">Predict</button>
-            </div>
-        </form>
 
-        <!-- Input flight data form -->
-        <form class="dataInput" id="delayUpload" action="/" method="POST" style="display: none;">
-            <input type="hidden" name="form_type" value="upload_flight">
-            <div class="inputField">
-                <h3>Just Landed? Upload your flight details below:</h3>
-            </div>
-            <div class="inputField">
-                <input type="text" placeholder="Enter Airline" name="airline" required>
-            </div>
-            <div class="inputField">
-                <input type="text" placeholder="Enter Origin Airport" name="origin" required>
-            </div>
-            <div class="inputField">
-                <input type="text" placeholder="Enter Destination Airport" name="destination" required>
-            </div>
-            <div class="inputField">
-                <input type="text" placeholder="Enter Departure Date" name="departureDate" required>
-            </div>
-            <div class="inputField">
-                <input type="text" placeholder="Enter Delay in Minutes" name="delayMinutes" required>
-            </div>
-            <div>
-                <button type="submit">Upload Data</button>
-            </div>
-        </form>
+            <!-- Predict your delay form -->
+            <form class="dataInput" id="delayPrediction" action="/" method="POST" style="display: none;">
+                <input type="hidden" name="form_type" value="predict_delay">
+                <div class="inputField">
+                    <h3>Want to know if you'll be delayed? Enter your flight info and we'll give you a prediction:</h3>
+                </div>
+                <div class="inputField">
+                    <input type="text" maxlength="255" placeholder="Enter Airline" name="airline" required>
+                </div>
+                <div class="inputField">
+                    <input type="text" maxlength="3" placeholder="Enter Origin Airport" name="origin" required>
+                </div>
+                <div class="inputField">
+                    <input type="text" maxlength="3" placeholder="Enter Destination Airport" name="destination" required>
+                </div>
+                <div class="inputField">
+                    <input type="date" name="flight_date" required>
+                </div>
+                <div>
+                    <button type="submit">Predict</button>
+                </div>
+            </form>
 
-        <!-- Edit your uploaded flights form -->
-        <div class="dataInput" id="delayEdit" style="display: none;">
-            <h3>Edit Your Flights</h3>
-            {% if user_flights %}
-                <ul>
-                    {% for flight in user_flights %}
-                        <li>
-                            Flight ID: {{ flight.id }}, Origin: {{ flight.origin }}, Destination: {{ flight.destination }}, Date: {{ flight.departure_date }}
-                            <form action="/" method="POST" style="display: inline;">
-                                <input type="hidden" name="form_type" value="edit_flight">
-                                <input type="hidden" name="flight_id" value="{{ flight.id }}">
-                                <label for="attribute">Attribute to Edit:</label>
-                                <select name="attribute">
-                                    <option value="origin">Origin</option>
-                                    <option value="destination">Destination</option>
-                                    <option value="departure_date">Departure Date</option>
-                                    <option value="delay_minutes">Delay Minutes</option>
-                                </select>
-                                <label for="new_value">New Value:</label>
-                                <input type="text" name="new_value" required>
-                                <button type="submit">Edit</button>
-                            </form>
-                        </li>
-                    {% endfor %}
-                </ul>
-            {% else %}
-                <p>No flights found.</p>
+            <!-- Input flight data form -->
+            <form class="dataInput" id="delayUpload" action="/" method="POST" style="display: none;">
+                <input type="hidden" name="form_type" value="upload_flight">
+                <div class="inputField">
+                    <h3>Just Landed? Upload your flight details below:</h3>
+                </div>
+                <div class="inputField">
+                    <input type="text" maxlength="255" placeholder="Enter Airline" name="airline" required>
+                </div>
+                <div class="inputField">
+                    <input type="text" maxlength="3" placeholder="Enter Origin Airport" name="origin" required>
+                </div>
+                <div class="inputField">
+                    <input type="text" maxlength="3" placeholder="Enter Destination Airport" name="destination" required>
+                </div>
+                <div class="inputField">
+                    <input type="date" name="departureDate" required>
+                </div>
+                <div class="inputField">
+                    <input type="number" placeholder="Enter Delay in Minutes" name="delayMinutes" required>
+                </div>
+                <div>
+                    <button type="submit">Upload Data</button>
+                </div>
+            </form>
+
+            <!-- Edit your uploaded flights form -->
+            <div class="dataInput" id="delayEdit" style="display: none;">
+                <h3>Edit Your Flights</h3>
+                {% if user_flights %}
+                    <ul>
+                        {% for flight in user_flights %}
+                            <li>
+                                Flight ID: {{ flight.id }}, Airline: {{flight.airline}}, Origin: {{ flight.origin }}, Destination: {{ flight.destination }}, Date: {{ flight.departure_date }}, Delay: {{flight.delay_minutes}} minutes
+                                <br>
+                                <form action="/" method="POST" style="display: inline;">
+                                    <input type="hidden" name="form_type" value="edit_flight">
+                                    <input type="hidden" name="flight_id" value="{{ flight.id }}">
+                                    <label for="attribute">Attribute to Edit:</label>
+                                    <select name="attribute" id="attributeSelection" onchange="getInputType()">
+                                        <option value="Airline">Airline</option>
+                                        <option value="Origin">Origin</option>
+                                        <option value="Destination">Destination</option>
+                                        <option value="DepartureDate">Departure Date</option>
+                                        <option value="DelayMinutes">Delay Minutes</option>
+                                    </select>
+                                    <label for="new_value">New Value:</label>
+                                    <div id="editInputContainer" style="display: inline">
+                                        <input type='text' maxlength='255' name='new_value' placeholder='Enter new airline' required>
+                                    </div>
+                                    <button type="submit">Edit</button>
+                                </form>
+                            </li>
+                        {% endfor %}
+                    </ul>
+                {% else %}
+                    <p>No flights found.</p>
+                {% endif %}
+            </div>
+
+            <!-- Delete an uploaded flights form -->
+            <div class="dataInput" id="delayDelete" style="display: none;">
+                <h3>Delete a Flight</h3>
+                {% if user_flights %}
+                    <ul>
+                        {% for flight in user_flights %}
+                            <li>
+                                Flight ID: {{ flight.id }}, Airline: {{ flight.airline }}, Origin: {{ flight.origin }}, Destination: {{ flight.destination }}, Date: {{ flight.departure_date }}
+                                <form action="/" method="POST" style="display: inline;">
+                                    <input type="hidden" name="form_type" value="delete_flight">
+                                    <input type="hidden" name="flight_id" value="{{ flight.id }}">
+                                    <button type="submit" class="deleteButton">
+                                        Delete
+                                    </button>
+                                </form>
+                            </li>
+                        {% endfor %}
+                    </ul>
+                {% else %}
+                    <p>No flights found.</p>
+                {% endif %}
+            </div>
+
+            <!-- Display the result if available -->
+            {% if result %}
+                <div class="result-section">
+                    <p><strong>Result:</strong> {{ result }}</p>
+                </div>
             {% endif %}
         </div>
 
-        <!-- Delete an uploaded flights form -->
-        <div class="dataInput" id="delayDelete" style="display: none;">
-            <h3>Delete a Flight</h3>
-            {% if user_flights %}
-                <ul>
-                    {% for flight in user_flights %}
-                        <li>
-                            Flight ID: {{ flight.id }}, Origin: {{ flight.origin }}, Destination: {{ flight.destination }}, Date: {{ flight.departure_date }}
-                            <form action="/" method="POST" style="display: inline;">
-                                <input type="hidden" name="form_type" value="delete_flight">
-                                <input type="hidden" name="flight_id" value="{{ flight.id }}">
-                                <button type="submit">Delete</button>
-                            </form>
-                        </li>
-                    {% endfor %}
-                </ul>
-            {% else %}
-                <p>No flights found.</p>
-            {% endif %}
+        <div class="footer">
+            <p>***Will I Be Delayed is not responsible for any missed flight compensation.</p>
         </div>
-
-        <!-- Display the result if available -->
-        {% if result %}
-            <div class="result-section">
-                <p><strong>Result:</strong> {{ result }}</p>
-            </div>
-        {% endif %}
-    </div>
-
-    <div class="footer">
-        <p>***Will I Be Delayed is not responsible for any missed flight compensation.</p>
-    </div>
-</body>
+    </body>
 </html>
+
 <script>
     document.addEventListener('DOMContentLoaded', function() {
-    showPredictionForm(); // Automatically display the first form (the prediction form) on page load
+        showPredictionForm(); // Automatically display the first form (the prediction form) on page load
     });
+
+    function showDropdown() {
+        document.getElementById('formSelect').style.display = "block";
+    }
+
+    function hideDropdown() {
+        document.getElementById('formSelect').style.display = "none";
+    }
+
     function showPredictionForm() {
         document.getElementById('delayPrediction').style.display = "block";
         document.getElementById('delayUpload').style.display = "none";
@@ -168,11 +197,35 @@
         document.getElementById('delayEdit').style.display = "block";
         document.getElementById('delayDelete').style.display = "none";
     }
+    
     function showDeleteForm() {
         document.getElementById('delayPrediction').style.display = "none";
         document.getElementById('delayUpload').style.display = "none";
         document.getElementById('delayEdit').style.display = "none";
         document.getElementById('delayDelete').style.display = "block";
     }
-    </script>
+
+    function getInputType() {
+        const inputContainer = document.getElementById("editInputContainer");
+        inputContainer.innerHTML = "";
+        const inputType = document.getElementById("attributeSelection").value;
+        switch (inputType) {
+            case "Airline":
+                inputContainer.innerHTML = "<input type='text' maxlength='255' name='new_value' placeholder='Enter new airline' required>";
+                break;
+            case "Origin":
+                inputContainer.innerHTML = "<input type='text' maxlength='3' name='new_value' placeholder='Enter new origin airport' required>";
+                break;
+            case "Destination":
+                inputContainer.innerHTML = "<input type='text' maxlength='3' name='new_value' placeholder='Enter new destination airport' required>";
+                break;
+            case "DepartureDate":
+                inputContainer.innerHTML = "<input type='date' name='new_value' required>";
+                break;
+            case "DelayMinutes":
+                inputContainer.innerHTML = "<input type='number' name='new_value' required>";
+                break;
+        }
+    }     
+</script>
 
