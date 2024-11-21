@@ -2,24 +2,11 @@ from datetime import datetime
 import pytz
 from flight_grabber import find_matching_planes
 from flight_scraper import fetch_flight_times
+from backend.official_query import get_timezone, airport_to_icao, airline_to_iata
 
-airport_timezones = {
-    'SFO': 'America/Los_Angeles',
-    'JFK': 'America/New_York',
-    'ORD': 'America/Chicago',
-}
-icao_to_iata = {
-    'JBU': 'B6',  # JetBlue
-    'AAL': 'AA',  # American Airlines
-    'DAL': 'DL',  # Delta Air Lines
-    'UAL': 'UA',  # United Airlines
-    'SWA': 'WN',  # Southwest Airlines
-}
 
 def get_timezone(airport_code):
-    timezone_name = airport_timezones.get(airport_code)
-    if not timezone_name:
-        return None
+    timezone_name = get_timezone(airport_code)
     return pytz.timezone(timezone_name)
 
 def analyze_flights(dep, arr, airline_code, start_time, finish_time, date=None):
@@ -35,7 +22,7 @@ def analyze_flights(dep, arr, airline_code, start_time, finish_time, date=None):
     finish_hour = int(finish_time.split(":")[0])
 
     # Grab flights using the flight grabber
-    flights = find_matching_planes("K" + dep, start_hour, get_timezone(dep), "K" + arr, finish_hour, get_timezone(arr), date)
+    flights = find_matching_planes(airport_to_icao(dep), start_hour, get_timezone(dep), airport_to_icao(arr), finish_hour, get_timezone(arr), date)
 
     # Filter flights by airline code
     matching_flights = [flight.strip() for flight in flights if flight.startswith(airline_code)]
@@ -44,7 +31,7 @@ def analyze_flights(dep, arr, airline_code, start_time, finish_time, date=None):
     # Scrape flight times and calculate delays
     for flight in matching_flights:
         flight_number = flight[len(airline_code):]  # Extract flight number from callsign
-        iata = icao_to_iata[airline_code]
+        iata = airline_to_iata(airline_code)
         flight_data = fetch_flight_times(iata, flight_number, year, month, day)
 
         if flight_data:

@@ -218,10 +218,99 @@ def validate_user(cursor, username, password):
         return "Password is valid"
     else:
         return "Password is invalid"
+    
+@db_connection
+def get_timezone(cursor, code):
+    if len(code) == 3:
+        code_type = "IATA"
+    elif len(code) == 4:
+        code_type = "ICAO"
+    else:
+        return None
+    
+    table_name = "airports"
+
+    query = f"""
+    SELECT Timezone
+    FROM {table_name}
+    WHERE {code_type} = %s
+    """
+
+    cursor.execute(query, (code))
+    timezone = cursor.fetchone()
+
+    if timezone is not None:
+        timezone = timezone[0]
+
+    return timezone
+
+@db_connection
+def airport_to_icao(cursor, code):
+    if len(code) != 3:
+        return None
+    
+    table_name = "airports"
+
+    query = f"""
+    SELECT ICAO
+    FROM {table_name}
+    WHERE IATA = %s
+    """
+
+    cursor.execute(query, (code))
+    icao_code = cursor.fetchone()
+
+    if icao_code is not None:
+        icao_code = icao_code[0]
+
+    return icao_code
+
+@db_connection
+def airport_to_iata(cursor, code):
+    if len(code) != 4:
+        return None
+    
+    table_name = "airports"
+
+    query = f"""
+    SELECT IATA
+    FROM {table_name}
+    WHERE ICAO = %s
+    """
+
+    cursor.execute(query, (code))
+    iata_code = cursor.fetchone()
+
+    if iata_code is not None:
+        iata_code = iata_code[0]
+
+    return iata_code
+
+@db_connection
+def airline_to_iata(cursor, code):
+    if len(code) != 3:
+        return None
+    
+    table_name = "airlines"
+
+    query = f"""
+    SELECT IATA
+    FROM {table_name}
+    WHERE ICAO = %s
+    """
+
+    cursor.execute(query, (code))
+    iata_code = cursor.fetchone()
+
+    if iata_code is not None:
+        iata_code = iata_code[0]
+
+    return iata_code
+
 
 if __name__ == "__main__":
     origin = "JFK"
-    destination = "SFO"
+    destination = "KSFO"
     airline = "United"
     departureDate = "2024-11-03"
     userID = "Alex"
@@ -233,7 +322,7 @@ if __name__ == "__main__":
     #print(insert_flight(userID, delayMinutes, airline, origin, destination, departureDate))
     #print(delete_flight("Fake", "3000008"))
     #print(validate_user(userID, password))
-    print(create_user(userID, password))
+    print(airline_to_iata('FFT'))
 
 
 
