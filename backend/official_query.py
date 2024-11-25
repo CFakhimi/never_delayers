@@ -158,6 +158,18 @@ def average_delay(cursor, origin, destination, airline, flight_date=None):
 def delay_compare(cursor, origin, destination, airline):
     pass
 
+@db_connection
+def get_top_flights(cursor, limit=10):
+    # This takes a while for some reason
+    query = """
+    SELECT *
+    FROM top_flights
+    LIMIT %s
+    """
+    cursor.execute(query, (limit,))
+    return cursor.fetchall()
+
+
 # Returns True if user exists, false if user does not exist
 @db_connection
 def check_user_existence(cursor, username):
@@ -306,6 +318,25 @@ def airline_to_iata(cursor, code):
         iata_code = iata_code[0]
 
     return iata_code
+
+@db_connection
+def airline_name_to_icao(cursor, airline_name):
+    table_name = "airlines"
+
+    query = f"""
+    SELECT ICAO
+    FROM {table_name}
+    WHERE Name = %s
+    """
+
+    cursor.execute(query, (airline_name,))
+    icao_code = cursor.fetchone()
+
+    if icao_code is not None:
+        icao_code = icao_code[0]
+
+    return icao_code
+
 
 
 if __name__ == "__main__":

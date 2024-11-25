@@ -20,10 +20,10 @@ def fetch_flight_times(airline, flight_number, year, month, day):
     actual_arrival = times[29] if len(times) > 3 else None
 
     # Print the results
-    print(f"Scheduled Departure: {scheduled_departure}")
-    print(f"Actual Departure: {actual_departure}")
-    print(f"Scheduled Arrival: {scheduled_arrival}")
-    print(f"Actual Arrival: {actual_arrival}")
+    # print(f"Scheduled Departure: {scheduled_departure}")
+    # print(f"Actual Departure: {actual_departure}")
+    # print(f"Scheduled Arrival: {scheduled_arrival}")
+    # print(f"Actual Arrival: {actual_arrival}")
 
     return {'scheduled_departure': scheduled_departure,
         'actual_departure': actual_departure,

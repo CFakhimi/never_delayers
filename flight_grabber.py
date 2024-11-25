@@ -5,7 +5,7 @@ import pytz
 api = OpenSkyApi(username='cfakhimi', password='1r1sh')
 
 # Helper function to convert local time to UTC timestamp with optional date
-def local_to_utc(hour_start, timezone, date=None):
+def local_to_utc(hour_start, timezone, date, delta):
     if date:
         specific_date = datetime.strptime(date, "%Y-%m-%d")
         specific_date = timezone.localize(specific_date)  # Attach the timezone to the date
@@ -20,23 +20,23 @@ def local_to_utc(hour_start, timezone, date=None):
     #print(f"UTC Time: {utc_time}")
     
     start_time = int(utc_time.timestamp())
-    end_time = int((utc_time + timedelta(hours=3)).timestamp())  # Assuming a 3-hour interval, may need to adjust
+    end_time = int((utc_time + timedelta(hours=delta)).timestamp())  # Assuming a 3-hour interval, may need to adjust
     return start_time, end_time
 
 
-def get_departures(airport_code, hour_start, timezone, date=None):
-    start_time, end_time = local_to_utc(hour_start, timezone, date)
+def get_departures(airport_code, hour_start, timezone, date, delta):
+    start_time, end_time = local_to_utc(hour_start, timezone, date, delta)
     return api.get_departures_by_airport(airport_code, start_time, end_time)
 
-def get_arrivals(airport_code, hour_start, timezone, date=None):
+def get_arrivals(airport_code, hour_start, timezone, date, delta):
     # Important that you offset the time start time by a bit because flights land early due to calculations
-    start_time, end_time = local_to_utc(hour_start-1, timezone, date)
+    start_time, end_time = local_to_utc(hour_start-1, timezone, date, delta)
     return api.get_arrivals_by_airport(airport_code, start_time, end_time)
 
 # Main function to find matching planes
-def find_matching_planes(dep_airport, dep_hour, dep_timezone, arr_airport, arr_hour, arr_timezone, date=None):
-    departures = get_departures(dep_airport, dep_hour, dep_timezone, date)
-    arrivals = get_arrivals(arr_airport, arr_hour, arr_timezone, date)
+def find_matching_planes(dep_airport, dep_hour, dep_timezone, arr_airport, arr_hour, arr_timezone, date=None, delta=3):
+    departures = get_departures(dep_airport, dep_hour, dep_timezone, date, delta)
+    arrivals = get_arrivals(arr_airport, arr_hour, arr_timezone, date, delta)
     #print(departures)
     #print(arrivals)
     if not departures:
@@ -55,16 +55,16 @@ def find_matching_planes(dep_airport, dep_hour, dep_timezone, arr_airport, arr_h
     print(f"Number of matching planes that took off from {dep_airport} and landed at {arr_airport}: {len(matching_planes)}")
     callsigns = []
     if matching_planes:
-        print("Matching Flights:")
+        #print("Matching Flights:")
         for icao24 in matching_planes:
             dep_flight = dep_flights[icao24]
             arr_flight = arr_flights[icao24]
             callsigns.append(dep_flight.callsign)
-            print(f"ICAO24: {icao24}")
+            #print(f"ICAO24: {icao24}")
             print(f"Callsign: {dep_flight.callsign}")
             #print(f"  Arrival callsign: {arr_flight.callsign}")
-            print(f"  Estimated Departure Time: {datetime.fromtimestamp(dep_flight.firstSeen, timezone.utc).astimezone(dep_timezone).strftime('%Y-%m-%d %H:%M:%S')} {dep_timezone.zone}")
-            print(f"  Estimated Arrival Time: {datetime.fromtimestamp(arr_flight.lastSeen, timezone.utc).astimezone(arr_timezone).strftime('%Y-%m-%d %H:%M:%S')} {arr_timezone.zone}")
+            #print(f"  Estimated Departure Time: {datetime.fromtimestamp(dep_flight.firstSeen, timezone.utc).astimezone(dep_timezone).strftime('%Y-%m-%d %H:%M:%S')} {dep_timezone.zone}")
+            #print(f"  Estimated Arrival Time: {datetime.fromtimestamp(arr_flight.lastSeen, timezone.utc).astimezone(arr_timezone).strftime('%Y-%m-%d %H:%M:%S')} {arr_timezone.zone}")
             print("-" * 40)
     return callsigns
 
