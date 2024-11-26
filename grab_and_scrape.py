@@ -51,12 +51,12 @@ def analyze_flights(dep, arr, airline, start_hour, finish_hour, date=None, delta
             return flight, arr_delay
 
 def calculate_delay(scheduled, actual):
-    if len(scheduled[-4:]) == 4: 
+    if len(scheduled[5:]) == 4: 
         scheduled_time, scheduled_tz = scheduled[:-4], scheduled[-4:]
     else:  # 3-character time zone
         scheduled_time, scheduled_tz = scheduled[:-3], scheduled[-3:]
     
-    if len(actual[-4:]) == 4:  
+    if len(actual[5:]) == 4:  
         actual_time, actual_tz = actual[:-4], actual[-4:]
     else: 
         actual_time, actual_tz = actual[:-3], actual[-3:]
@@ -75,5 +75,6 @@ if __name__ == "__main__":
     start_time = "06:00"
     finish_time = "12:00"
     date = "2024-11-24"  # Optional date, needs to be within 3 days
-
-    analyze_flights(dep, arr, airline, start_time, finish_time, date)
+    delay = calculate_delay('08:00CST', '07:47CST')
+    print(delay)
+    #analyze_flights(dep, arr, airline, start_time, finish_time, date)
