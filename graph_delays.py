@@ -8,20 +8,17 @@ def main():
     top_flights = get_top_flights(limit=10)
 
     # Hard coded values
-    today_date = "2024-11-24"
-    start_time = "12:00"
-    finish_time = "12:00"
-    delta = 12 # Hours something can be off by, put at 12 and the both start and time in the middle should mean all of flights in day
-    # Default is delta = 3
+    today_date = "2024-11-25"
+    delta = 3
     scatter_data = []
 
     for flight in top_flights:
         #print(flight)
-        airline, origin, destination, _ = flight
-        print(airline, origin, destination)
+        airline, origin, destination, departure, arrival = flight
+        print(airline, origin, destination, departure, arrival)
         today_delays = analyze_flights(
             dep=origin, arr=destination, airline=airline,
-            start_time=start_time, finish_time=finish_time, date=today_date, delta=delta
+            start_hour=departure, finish_hour=arrival, date=today_date, delta=delta
         )
         avg_delay = average_delay(origin, airline, today_date) # Need to add refining for month
         # Need to actually make avg delay a number and not a word?
@@ -59,6 +56,7 @@ def main():
     plt.legend()
     plt.grid(True)
     plt.show()
+
 
 if __name__ == "__main__":
     main()

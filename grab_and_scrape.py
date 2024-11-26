@@ -9,7 +9,7 @@ def get_timezone_wrapper(airport_code):
     timezone_name = get_timezone(airport_code)
     return pytz.timezone(timezone_name)
 
-def analyze_flights(dep, arr, airline, start_time, finish_time, date=None, delta=3):
+def analyze_flights(dep, arr, airline, start_hour, finish_hour, date=None, delta=3):
     if date:
         parsed_date = datetime.strptime(date, "%Y-%m-%d")
         year, month, day = parsed_date.year, parsed_date.month, parsed_date.day
@@ -18,8 +18,8 @@ def analyze_flights(dep, arr, airline, start_time, finish_time, date=None, delta
         year, month, day = now.year, now.month, now.day
 
     # Convert start and finish times to hours
-    start_hour = int(start_time.split(":")[0])
-    finish_hour = int(finish_time.split(":")[0])
+    #start_hour = int(start_time.split(":")[0])
+    #finish_hour = int(finish_time.split(":")[0])
 
     # Grab flights using the flight grabber
     flights = find_matching_planes(airport_to_icao(dep), start_hour, get_timezone_wrapper(dep), airport_to_icao(arr), finish_hour, get_timezone_wrapper(arr), date, delta)
