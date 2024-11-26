@@ -19,6 +19,9 @@ def fetch_flight_times(airline, flight_number, year, month, day):
     scheduled_arrival = times[27] if len(times) > 2 else None
     actual_arrival = times[29] if len(times) > 3 else None
 
+    if scheduled_departure is None or actual_departure is None or scheduled_arrival is None or actual_arrival is None:
+        return None
+
     # Print the results
     # print(f"Scheduled Departure: {scheduled_departure}")
     # print(f"Actual Departure: {actual_departure}")
