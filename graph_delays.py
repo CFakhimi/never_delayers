@@ -5,12 +5,14 @@ from grab_and_scrape import analyze_flights
 
 # Main script
 def main():
-    top_flights = get_top_flights(limit=10)
+    limit = 100
+    top_flights = get_top_flights(limit=limit)
 
     # Hard coded values
     today_date = "2024-11-25"
     delta = 3
     scatter_data = []
+    notFound = 0
 
     for flight in top_flights:
         #print(flight)
@@ -20,14 +22,17 @@ def main():
             dep=origin, arr=destination, airline=airline,
             start_hour=departure, finish_hour=arrival, date=today_date, delta=delta
         )
-        avg_delay = average_delay(origin, airline, today_date) # Need to add refining for month
+        avg_delay = average_delay(origin, destination, airline, today_date) # Need to add refining for month
         # Need to actually make avg delay a number and not a word?
         if today_delays == None:
             print("Did not fly today")
+            notFound += 1
             continue
         flight_number, today_delay = today_delays
         print(flight_number, avg_delay, today_delay)
         scatter_data.append((flight_number, avg_delay, today_delay))
+
+    print(f'{notFound} of {limit} flights not found today')    
 
     flight_labels = [data[0] for data in scatter_data]
     avg_delays = [data[1] for data in scatter_data]
