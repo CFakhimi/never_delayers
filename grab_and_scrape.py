@@ -48,7 +48,7 @@ def analyze_flights(dep, arr, airline, start_hour, finish_hour, date=None, delta
             print(f"\nFlight {flight}:")
             print(f"  Departure Delay: {dep_delay} minutes")
             print(f"  Arrival Delay: {arr_delay} minutes")
-            return flight, arr_delay
+            return flight, dep_delay, arr_delay
 
 def calculate_delay(scheduled, actual):
     if len(scheduled[5:]) == 4: 

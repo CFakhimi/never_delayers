@@ -155,6 +155,23 @@ def average_delay(cursor, origin, destination, airline, flight_date=None):
     return f"Average delay for {airline} from {origin} to {destination}: {user_avg_delay} minutes"
 
 @db_connection
+def average_delay_numeric(cursor, origin, destination, airline, flight_date=None): 
+    '''
+    cursor, origin, desintation,airline
+    '''
+    table_name = "flight_info"
+    
+    your_delay_query = f"""
+    SELECT AVG(DelayMinutes)
+    FROM {table_name}
+    WHERE Origin = %s AND Destination = %s AND Airline = %s
+    """
+    cursor.execute(your_delay_query, (origin, destination, airline))
+    user_avg_delay = cursor.fetchone()[0]
+    
+    return user_avg_delay
+
+@db_connection
 def delay_compare(cursor, origin, destination, airline):
     pass
 
