@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <title>Behold the Delays</title>
+        <link rel="stylesheet" href="{{url_for('static',filename='css/data_visualization.css')}}" />
+        <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+        <script type="text/javascript" src="{{url_for('static',filename='js/data_visualization.js')}}"></script>
+    </head>
+    <body>
+        <div class="header">
+            <h1>Lovely Lovely Graphs</h1>
+        </div>
+        <!-- Home navigation bar -->
+        <div class="navbar"> 
+            <a href="/login" method="GET">Login</a>
+            <a href="/create_account" method="GET">Create an Account</a>
+            <a href="/" method="GET">Back to Home</a>
+            <div class="nav-right">
+                <p><b>User: {{userID}}</b><p/>
+            </div>
+        </div>
+        <div class="mainDiv">
+            <canvas id="myChart" avgDelays='{{averageAirlineDelays | tojson}}' airlines='{{airlines | tojson}}'></canvas>
+        </div>
+    </body>
+</html>

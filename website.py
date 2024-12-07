@@ -1,10 +1,12 @@
 from flask import Flask, render_template, request, session, jsonify
 from flask import redirect, url_for # For better redirects
 from flask import flash # Quick user messages
-from backend.official_query import average_delay, insert_flight, get_user_flights, delete_flight, edit_flight, validate_user, create_user
+from backend.official_query import all_airline_average_delays, average_delay, insert_flight, get_user_flights, delete_flight, edit_flight, validate_user, create_user
 import os
+import json
 
 app = Flask(__name__,
+            static_folder=os.path.abspath('./static'),
             template_folder=os.path.abspath('./templates'))
 app.secret_key = 'secret_key'  # Fix at some point
 
@@ -120,6 +122,32 @@ def create_account():
     else:
         flash('Account not created. Passwords did not match.')
     return redirect(url_for('index'))
+
+@app.route('/data_visualization', methods=['GET'])
+def data_page():
+    userID = session.get('username', 'Not logged in')
+    average_delay_by_airline = all_airline_average_delays()
+    # The delays are in the format 'Decimal(__delay__)'
+    # Extract out just the delay as a float
+    delay_data = {key: float(value) for key, value in average_delay_by_airline.items()}
+    #print(type(delay_data))
+    #print(delay_data)
+    airlines = list(delay_data.keys())
+    averageAirlineDelays = list(delay_data.values())
+    #print(type(json.dumps(airlines)))
+    #print(json.dumps(averageAirlineDelays))
+    #print(airlines)
+    #print(averageAirlineDelays)
+    return render_template('data_visualization.html', userID=userID, airlines=airlines, averageAirlineDelays=averageAirlineDelays)
+
+# # Setup an asynchronous call for queries to speed up page loading time
+# # Need to install the async extra to do this
+#@app.route('/airline_avg_delays', methods=['GET'])
+#async def airline_avg_delays_graph():
+#    average_delay_by_airline = all_airline_average_delays()
+#    print(type(average_delay_by_airline))
+#    print(average_delay_by_airline)
+#    return average_delay_by_airline 
 
 if __name__ == '__main__':
     app.run(host='db8.cse.nd.edu', debug=True, port="5013")

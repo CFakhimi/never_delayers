@@ -131,7 +131,22 @@ def get_user_flights(cursor, userID):
     your_flights = [dict(zip(flight_keys, flight)) for flight in your_flights]
 
     return your_flights
-    
+   
+# Returns a dictionary in the form of {Airline: DelayMinutes}
+@db_connection
+def all_airline_average_delays(cursor):
+    table_name = "flight_info"
+
+    delays_query = f"""
+    SELECT Airline, AVG(DelayMinutes)
+    FROM {table_name}
+    GROUP BY Airline
+    """
+
+    cursor.execute(delays_query)
+    all_avg_delays = cursor.fetchall()
+    delays_dict = {airline: avg_delay for airline, avg_delay in all_avg_delays}
+    return dict(all_avg_delays)
 
 @db_connection
 def average_delay(cursor, origin, destination, airline, flight_date=None): 
