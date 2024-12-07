@@ -9,7 +9,7 @@
             <h1>Create Your Account:</h1>
         </div>
         <div class="loginStuff">
-            <form action="/create_account" method="POST" class="accountInfo">
+            <form action="{{ url_for('create_account') }}" method="POST" class="accountInfo">
                 <label for="uname"><b>Username:</b></label>
                 <input type="text" placeholder="Enter Username" name="uname" required>
                 <label for="pswd"><b>Password:</b></label>
@@ -19,7 +19,7 @@
                 <br>
                 <button type="submit">Create Account</button>
             </form>
-            <form action="/" method="GET" class="return">
+            <form action="{{ url_for('home') }}" method="GET" class="return">
                 <button type="submit">Cancel</button>
             </form>
         </div>

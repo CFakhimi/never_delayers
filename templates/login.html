@@ -9,7 +9,7 @@
             <h1>Login To Your Account:</h1>
         </div>
         <div class="loginStuff">
-            <form class="accountInfo" action="/login" method="POST">
+            <form class="accountInfo" action="{{ url_for('login') }}" method="POST">
                 <label for="uname"><b>Username:</b></label>
                 <input type="text" placeholder="Enter Username" name="uname" required>
                 <label for="pswd"><b>Password:</b></label>
@@ -17,7 +17,7 @@
                 <br>
                 <button type="submit">Login</button>
             </form>
-            <form class="return" action="/" method="GET">
+            <form class="return" action="{{ url_for('home') }}" method="GET">
                 <button type="submit">Cancel</button>
             </form>
         </div>

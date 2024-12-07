@@ -14,8 +14,12 @@ def query_database(inputs):
     print("This does nothing")
     return "nothing"
 
-@app.route('/', methods=['POST', 'GET'])
-def index(): # This is the home page!!!
+@app.route('/', methods=['GET'])
+def index():
+    return render_template('index.html')
+
+@app.route('/home', methods=['POST', 'GET'])
+def home(): # This is the home page!!!
     userID = session.get('username', 'Not logged in')
     user_flights = get_user_flights(userID=userID)
     #print(user_flights)
@@ -51,7 +55,7 @@ def index(): # This is the home page!!!
                 result = "Please log in to add a flight."
             flash(result)
             #flash(f'Upload Status: {upload_status}')
-            return redirect(url_for('index'))
+            return redirect(url_for('home'))
 
         elif form_type == 'delete_flight':
             flight_id = request.form.get('flight_id')
@@ -61,7 +65,7 @@ def index(): # This is the home page!!!
             else:
                 result = f"Failed to delete Flight ID {flight_id}."
             flash(result)
-            return redirect(url_for('index'))
+            return redirect(url_for('home'))
 
         elif form_type == 'edit_flight':
             flight_id = request.form.get('flight_id')
@@ -74,9 +78,9 @@ def index(): # This is the home page!!!
             else:
                 result = f"Failed to edit Flight ID {flight_id}."
             flash(result)
-            return redirect(url_for('index'))
+            return redirect(url_for('home'))
 
-    return render_template('index.html', userID=userID, result=result, user_flights=user_flights)
+    return render_template('home.html', userID=userID, result=result, user_flights=user_flights)
 
 @app.route('/login', methods=['GET'])
 def login():
@@ -91,23 +95,23 @@ def authenticate():
     if userStatus == "Password is valid":  
         session['username'] = username
         flash('Login successful!')
-        return redirect(url_for('index'))
+        return redirect(url_for('home'))
     else:
         flash('Invalid username or password')
-        return redirect(url_for('index'))
+        return redirect(url_for('home'))
 
 @app.route('/logout')
 def logout():
     session.pop('username', None)
     flash('You have been logged out.')
-    return redirect(url_for('index'))
+    return redirect(url_for('home'))
 
 @app.route('/create_account', methods=['GET'])
-def register():
+def create_account():
     return render_template('create_account.html')
 
 @app.route('/create_account', methods=['POST'])
-def create_account():
+def register():
     username = request.form['uname']
     password = request.form['pswd']
     passwordConfirm = request.form['pswdConfirm']
@@ -121,7 +125,7 @@ def create_account():
             flash('Account not created. Username already exists.')
     else:
         flash('Account not created. Passwords did not match.')
-    return redirect(url_for('index'))
+    return redirect(url_for('login'))
 
 @app.route('/data_visualization', methods=['GET'])
 def data_page():
