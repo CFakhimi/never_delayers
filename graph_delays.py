@@ -12,7 +12,7 @@ def main():
 
     # Hard coded values
     now = datetime.now()
-    today_date = now.date
+    today_date = now.strftime('%Y-%m-%d')
     delta = 2
     scatter_data = []
     notFound = 0
