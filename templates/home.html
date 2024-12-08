@@ -3,7 +3,7 @@
     <head>
         <meta charset="UTF-8" />
         <title>Will I Be Delayed?</title>
-        <link rel="stylesheet" href="../static/css/styles.css" />
+        <link rel="stylesheet" href="{{ url_for('static', filename='css/home.css') }}" />
         <script src="{{ url_for('static', filename='js/home.js') }}" defer></script>
     </head>
     <body>
@@ -39,19 +39,19 @@
         <div class="content">
             <!-- Dropdown for choosing which form to use -->
             <div class="formDropdown">
-                <button class="formDropdownButton" onmouseover="showDropdown()" onmouseout="hideDropdown()">
-                    Options <span class="arrow">&#9662;</span>
+                <button class="formDropdownButton" id="dropdownMainButton" onmouseover="showDropdown()" onmouseout="hideDropdown()">
+                    Predict My Delay <span class="arrow">&#9662;</span>
                 </button>
                 <div class="formDropdownContent" id="formSelect" onmouseover="showDropdown()" onmouseout="hideDropdown()">
-                    <a href="#" class="dataForm" form-type="predict" onclick="showPredictionForm()">Predict My Delay</a>
-                    <a href="#" class="dataForm" form-type="upload" onclick="showUploadForm()">Just Landed? -- Upload My Flight</a>
-                    <a href="#" class="dataForm" form-type="edit" onclick="showEditForm()">Edit My Uploaded Flights</a>
-                    <a href="#" class="dataForm" form-type="delete" onclick="showDeleteForm()">Delete An Uploaded Flight</a>
+                    <a href="#" class="dataForm" form-type="predict" onclick="selectOption(event, this)">Predict My Delay</a>
+                    <a href="#" class="dataForm" form-type="upload" onclick="selectOption(event, this)">Just Landed? -- Upload My Flight</a>
+                    <a href="#" class="dataForm" form-type="edit" onclick="selectOption(event, this)">Edit My Uploaded Flights</a>
+                    <a href="#" class="dataForm" form-type="delete" onclick="selectOption(event, this)">Delete An Uploaded Flight</a>
                 </div>
             </div>
 
             <!-- Predict your delay form -->
-            <form class="dataInput" id="delayPrediction" action="{{ url_for('home') }}" method="POST" style="display: none;">
+            <form class="dataInput active" id="predict" action="{{ url_for('home') }}" method="POST">
                 <input type="hidden" name="form_type" value="predict_delay">
                 <div class="inputField">
                     <h3>Want to know if you'll be delayed? Enter your flight info and we'll give you a prediction:</h3>
@@ -74,7 +74,7 @@
             </form>
 
             <!-- Input flight data form -->
-            <form class="dataInput" id="delayUpload" action="{{ url_for('home') }}" method="POST" style="display: none;">
+            <form class="dataInput" id="upload" action="{{ url_for('home') }}" method="POST">
                 <input type="hidden" name="form_type" value="upload_flight">
                 {% if userID == 'Not logged in' %}
                     <p>Please log in to upload your flights.</p>
@@ -104,7 +104,7 @@
             </form>
 
             <!-- Edit your uploaded flights form -->
-            <div class="dataInput" id="delayEdit" style="display: none;">
+            <div class="dataInput" id="edit">
                 <h3>Edit Your Flights</h3>
                 {% if userID == 'Not logged in' %}
                     <p>Please log in to view your flights.</p>
@@ -142,7 +142,7 @@
             </div>
 
             <!-- Delete an uploaded flights form -->
-            <div class="dataInput" id="delayDelete" style="display: none;">
+            <div class="dataInput" id="delete">
                 <h3>Delete a Flight</h3>
                 {% if userID == 'Not logged in' %}
                     <p>Please log in to view your flights.</p>

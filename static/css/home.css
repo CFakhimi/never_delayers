@@ -126,6 +126,11 @@ button:hover {
     text-align: left;
 }
 
+/** Display first option by default */
+.dataInput.active {
+    display: block;
+}
+
 .dataInput input {
     display: block;
     margin: auto;

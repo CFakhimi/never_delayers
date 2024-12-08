@@ -1,38 +1,41 @@
-document.addEventListener('DOMContentLoaded', function() {
-    showPredictionForm(); // Automatically display the first form (the prediction form) on page load
-});
-
-// function toggleDropdown() {
-//   const dropdownContent = document.getElementById('formSelect');
-//   dropdownContent.classList.toggle('show');
-// }
-
-// function selectOption(selectedElement) {
-//   // Get the button element
-//   const dropdownButton = document.getElementById('dropdownMainButton');
-  
-//   // Update button text to selected option's text
-//   dropdownButton.innerHTML = `${selectedElement.textContent} <span class="arrow">&#9662;</span>`;
-  
-//   // Close the dropdown
-//   const dropdownContent = document.getElementById('formSelect');
-//   dropdownContent.classList.remove('show');
-  
-//   // Call the original onclick function if it exists
-//   if (selectedElement.getAttribute('onclick')) {
-//       window.eval(selectedElement.getAttribute('onclick'));
-//   }
-// }
-
-// // Close the dropdown if user clicks outside
-// window.addEventListener('click', function(event) {
-//   const dropdownContent = document.getElementById('formSelect');
-//   const dropdownButton = document.getElementById('dropdownMainButton');
-  
-//   if (!event.target.matches('.formDropdownButton, .formDropdownButton *')) {
-//       dropdownContent.classList.remove('show');
-//   }
+// document.addEventListener('DOMContentLoaded', function() {
+//     showPredictionForm(); // Automatically display the first form (the prediction form) on page load
 // });
+
+function selectOption(event, element) {
+  event.preventDefault();
+
+  // Get the form type from the 'form-type' attribute of the clicked element
+  const formType = element.getAttribute('form-type');
+
+  // Hide all forms
+  const forms = document.querySelectorAll('.dataInput');
+  forms.forEach(form => form.classList.remove('active'));
+
+  // Show the selected form
+  const selectedForm = document.getElementById(formType);
+  if (selectedForm) {
+    selectedForm.classList.add('active');
+  }
+
+  // Update the button label to match the clicked option's inner text
+  const dropdownButton = document.getElementById('dropdownMainButton');
+  dropdownButton.innerHTML = `${element.innerText} <span class="arrow">&#9662;</span>`;
+}
+
+// function selectOption(event, formType) {
+//   event.preventDefault();
+
+//   // Hide all forms
+//   const forms = document.querySelectorAll('.dataInput');
+//   forms.forEach(form => form.classList.remove('active'));
+
+//   // Show the selected form
+//   const selectedForm = document.getElementById(formType);
+//   if (selectedForm) {
+//     selectedForm.classList.add('active');
+//   }
+// }
 
 function showDropdown() {
     document.getElementById('formSelect').style.display = "block";
@@ -42,33 +45,33 @@ function hideDropdown() {
     document.getElementById('formSelect').style.display = "none";
 }
 
-function showPredictionForm() {
-    document.getElementById('delayPrediction').style.display = "block";
-    document.getElementById('delayUpload').style.display = "none";
-    document.getElementById('delayEdit').style.display = "none";
-    document.getElementById('delayDelete').style.display = "none";
-}
+// function showPredictionForm() {
+//     document.getElementById('delayPrediction').style.display = "block";
+//     document.getElementById('delayUpload').style.display = "none";
+//     document.getElementById('delayEdit').style.display = "none";
+//     document.getElementById('delayDelete').style.display = "none";
+// }
 
-function showUploadForm() {
-    document.getElementById('delayPrediction').style.display = "none";
-    document.getElementById('delayUpload').style.display = "block";
-    document.getElementById('delayEdit').style.display = "none";
-    document.getElementById('delayDelete').style.display = "none";
-}
+// function showUploadForm() {
+//     document.getElementById('delayPrediction').style.display = "none";
+//     document.getElementById('delayUpload').style.display = "block";
+//     document.getElementById('delayEdit').style.display = "none";
+//     document.getElementById('delayDelete').style.display = "none";
+// }
 
-function showEditForm() {
-    document.getElementById('delayPrediction').style.display = "none";
-    document.getElementById('delayUpload').style.display = "none";
-    document.getElementById('delayEdit').style.display = "block";
-    document.getElementById('delayDelete').style.display = "none";
-}
+// function showEditForm() {
+//     document.getElementById('delayPrediction').style.display = "none";
+//     document.getElementById('delayUpload').style.display = "none";
+//     document.getElementById('delayEdit').style.display = "block";
+//     document.getElementById('delayDelete').style.display = "none";
+// }
 
-function showDeleteForm() {
-    document.getElementById('delayPrediction').style.display = "none";
-    document.getElementById('delayUpload').style.display = "none";
-    document.getElementById('delayEdit').style.display = "none";
-    document.getElementById('delayDelete').style.display = "block";
-}
+// function showDeleteForm() {
+//     document.getElementById('delayPrediction').style.display = "none";
+//     document.getElementById('delayUpload').style.display = "none";
+//     document.getElementById('delayEdit').style.display = "none";
+//     document.getElementById('delayDelete').style.display = "block";
+// }
 
 function getInputType() {
     const inputContainer = document.getElementById("editInputContainer");
