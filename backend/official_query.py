@@ -149,6 +149,26 @@ def all_airline_average_delays(cursor):
     return dict(all_avg_delays)
 
 @db_connection
+def top_route_delays(cursor):
+    table_name = "flight_info"
+
+    delays_query = f"""
+    SELECT Origin, Destination, AVG(DelayMinutes) as Delay
+    FROM {table_name}
+    GROUP BY Origin, Destination
+    HAVING COUNT(*) >= 15
+    ORDER BY Delay DESC 
+    LIMIT 15
+    """
+
+    cursor.execute(delays_query)
+    all_avg_delays = cursor.fetchall()
+    #print(all_avg_delays)
+    # Convert results into a list of dictionaries
+    return [{"route": f"{row[0]}-{row[1]}", "delay": row[2]} for row in all_avg_delays]
+
+
+@db_connection
 def average_delay(cursor, origin, destination, airline, flight_date=None): 
     '''
     cursor, origin, desintation,airline
