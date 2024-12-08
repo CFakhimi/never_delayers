@@ -1,26 +1,204 @@
 <!DOCTYPE html>
 <html lang="en">
-    <head>
-        <title>Behold the Delays</title>
-        <link rel="stylesheet" href="{{url_for('static',filename='css/data_visualization.css')}}" />
-        <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-        <script type="text/javascript" src="{{url_for('static',filename='js/data_visualization.js')}}"></script>
-    </head>
-    <body>
-        <div class="header">
-            <h1>Lovely Lovely Graphs</h1>
+<head>
+    <title>Behold the Delays</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/data_visualization.css') }}" />
+    <script src="https://d3js.org/d3.v7.min.js"></script>
+    <style>
+        /* Tooltip styling */
+        .tooltip {
+            position: absolute;
+            background-color: #333;
+            color: #fff;
+            padding: 5px 10px;
+            border-radius: 5px;
+            font-size: 0.9rem;
+            pointer-events: none;
+            opacity: 0;
+            transition: opacity 0.2s;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>Lovely Lovely Graphs</h1>
+    </div>
+
+    <div class="navbar"> 
+        <a href="/login" method="GET">Login</a>
+        <a href="/create_account" method="GET">Create an Account</a>
+        <a href="/" method="GET">Back to Home</a>
+        <div class="nav-right">
+            <p><b>User: {{ userID }}</b></p>
         </div>
-        <!-- Home navigation bar -->
-        <div class="navbar"> 
-            <a href="/login" method="GET">Login</a>
-            <a href="/create_account" method="GET">Create an Account</a>
-            <a href="/" method="GET">Back to Home</a>
-            <div class="nav-right">
-                <p><b>User: {{userID}}</b><p/>
+    </div>
+
+    <div class="carousel">
+        <div id="prev" class="arrow-btn">
+            ⬅
+            <span id="prev-label">Previous</span>
+        </div>
+
+        <div id="chartContainer" class="chart-container">
+            <div class="chart" id="chart1">
+                <h2 class="chart-title">Average Delays by Airline</h2>
+                <svg id="svg1" data-delays='{{ averageAirlineDelays | tojson }}' data-airlines='{{ airlines | tojson }}'></svg>
+            </div>
+            <div class="chart" id="chart2">
+                <h2 class="chart-title">Our Predicted Accuracy by Date</h2>
+                <svg id="svg2"></svg>
+            </div>
+            <div class="chart" id="chart3">
+                <h2 class="chart-title">Top Delayed Routes</h2>
+                <svg id="svg3" data-routes='{{ top_routes | tojson }}'></svg>
             </div>
         </div>
-        <div class="mainDiv">
-            <canvas id="myChart" avgDelays='{{averageAirlineDelays | tojson}}' airlines='{{airlines | tojson}}'></canvas>
+
+        <div id="next" class="arrow-btn">
+            ➡
+            <span id="next-label">Next</span>
         </div>
-    </body>
+    </div>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+    let currentIndex = 0;
+    const charts = d3.selectAll(".chart").nodes();
+    const chartLabels = [
+        "Average Delays by Airline",
+        "Our Predicted Accuracy by Date",
+        "Top Delayed Routes"
+    ];
+
+    function showChart(index) {
+        charts.forEach((chart, i) => {
+            chart.style.display = i === index ? "block" : "none";
+        });
+        updateLabels();
+    }
+
+    function updateLabels() {
+        const prevIndex = (currentIndex - 1 + charts.length) % charts.length;
+        const nextIndex = (currentIndex + 1) % charts.length;
+        d3.select("#prev-label").text(chartLabels[prevIndex]);
+        d3.select("#next-label").text(chartLabels[nextIndex]);
+    }
+
+    d3.select("#prev").on("click", () => {
+        currentIndex = (currentIndex - 1 + charts.length) % charts.length;
+        showChart(currentIndex);
+    });
+
+    d3.select("#next").on("click", () => {
+        currentIndex = (currentIndex + 1) % charts.length;
+        showChart(currentIndex);
+    });
+
+    showChart(currentIndex);
+
+    // Create tooltip once for all charts
+    const tooltip = d3.select("body").append("div")
+        .attr("class", "tooltip")
+        .style("opacity", 0);
+
+    // Chart 1: Average Delays by Airline
+    const svg1 = d3.select("#svg1");
+    const airlineDelays = JSON.parse(svg1.attr("data-delays"));
+    const airlines = JSON.parse(svg1.attr("data-airlines"));
+
+    const sortedData = airlines
+        .map((airline, i) => ({ label: airline, value: airlineDelays[i] }))
+        .sort((a, b) => a.value - b.value)
+        .slice(0, -1);
+
+    createChart("#svg1", sortedData, (d) => `${d.label}: ${d.value.toFixed(2)} mins`);
+
+    // ** Updated Data for Chart 2: Predicted Accuracy by Date **
+    const predictedAccuracyData = [
+        { label: "2024-12-01", value: 68.06 },
+        { label: "2024-12-02", value: 72.86 },
+        { label: "2024-12-03", value: 75.00 },
+        { label: "2024-12-04", value: 61.54 },
+        { label: "2024-12-05", value: 72.73 },
+        { label: "2024-12-06", value: 60.94 }
+    ];
+
+    createChart("#svg2", predictedAccuracyData, (d) => `${d.value.toFixed(2)}%`);
+
+    // Chart 3: Top Delayed Routes
+    const svg3 = d3.select("#svg3");
+    const topRoutes = JSON.parse(svg3.attr("data-routes"));
+
+    const topRoutesData = topRoutes.map(route => ({
+        label: route.route,
+        value: route.delay
+    }));
+
+    createChart("#svg3", topRoutesData, (d) => `${d.value.toFixed(2)} mins`);
+
+    // Function to create a chart with D3.js
+    function createChart(svgId, data, tooltipFormatter) {
+        const svg = d3.select(svgId)
+            .attr("width", "100%")
+            .attr("height", "100%")
+            .attr("viewBox", "0 0 800 500");
+
+        const margin = { top: 50, right: 30, bottom: 100, left: 70 };
+        const width = 800 - margin.left - margin.right;
+        const height = 500 - margin.top - margin.bottom;
+
+        const chart = svg.append("g")
+            .attr("transform", `translate(${margin.left},${margin.top})`);
+
+        const x = d3.scaleBand()
+            .domain(data.map(d => d.label))
+            .range([0, width])
+            .padding(0.3);
+
+        const y = d3.scaleLinear()
+            .domain([0, d3.max(data, d => d.value)])
+            .nice()
+            .range([height, 0]);
+
+        chart.append("g")
+            .attr("transform", `translate(0, ${height})`)
+            .call(d3.axisBottom(x))
+            .selectAll("text")
+            .attr("dy", ".35em")
+            .attr("transform", "rotate(-45)")
+            .style("text-anchor", "end")
+            .style("font-size", "1rem");
+
+        chart.append("g")
+            .call(d3.axisLeft(y).ticks(10))
+            .selectAll("text")
+            .style("font-size", "1.2rem");
+
+        chart.selectAll(".bar")
+            .data(data)
+            .enter().append("rect")
+            .attr("class", "bar")
+            .attr("x", d => x(d.label))
+            .attr("y", d => y(d.value))
+            .attr("width", x.bandwidth())
+            .attr("height", d => height - y(d.value))
+            .attr("fill", "darkred")
+            .on("mouseover", (event, d) => {
+                tooltip.transition().duration(200).style("opacity", 1);
+                tooltip.html(tooltipFormatter(d))
+                    .style("left", (event.pageX + 10) + "px")
+                    .style("top", (event.pageY - 20) + "px");
+            })
+            .on("mousemove", (event) => {
+                tooltip.style("left", (event.pageX + 10) + "px")
+                       .style("top", (event.pageY - 20) + "px");
+            })
+            .on("mouseout", () => {
+                tooltip.transition().duration(200).style("opacity", 0);
+            });
+    }
+});
+
+    </script>
+</body>
 </html>

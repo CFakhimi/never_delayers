@@ -1,7 +1,7 @@
 from flask import Flask, render_template, request, session, jsonify
 from flask import redirect, url_for # For better redirects
 from flask import flash # Quick user messages
-from backend.official_query import all_airline_average_delays, average_delay, insert_flight, get_user_flights, delete_flight, edit_flight, validate_user, create_user
+from backend.official_query import all_airline_average_delays, average_delay, insert_flight, get_user_flights, delete_flight, edit_flight, validate_user, create_user, top_route_delays
 import os
 import json
 
@@ -126,7 +126,6 @@ def create_account():
 @app.route('/data_visualization', methods=['GET'])
 def data_page():
     userID = session.get('username', 'Not logged in')
-    average_delay_by_airline = all_airline_average_delays()
     # The delays are in the format 'Decimal(__delay__)'
     # Extract out just the delay as a float
     delay_data = {key: float(value) for key, value in average_delay_by_airline.items()}
@@ -138,7 +137,7 @@ def data_page():
     #print(json.dumps(averageAirlineDelays))
     #print(airlines)
     #print(averageAirlineDelays)
-    return render_template('data_visualization.html', userID=userID, airlines=airlines, averageAirlineDelays=averageAirlineDelays)
+    return render_template('data_visualization.html', userID=userID, airlines=airlines, averageAirlineDelays=averageAirlineDelays, top_routes=top_routes)
 
 # # Setup an asynchronous call for queries to speed up page loading time
 # # Need to install the async extra to do this
@@ -150,4 +149,6 @@ def data_page():
 #    return average_delay_by_airline 
 
 if __name__ == '__main__':
-    app.run(host='db8.cse.nd.edu', debug=True, port="5013")
+    top_routes = top_route_delays()
+    average_delay_by_airline = all_airline_average_delays()
+    app.run(host='db8.cse.nd.edu', debug=True, port="5014")
