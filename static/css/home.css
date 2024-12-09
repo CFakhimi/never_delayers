@@ -108,7 +108,7 @@ button:hover {
     display: block;
 }
 
-.dataInput input {
+.dataInput input, select {
     display: block;
     margin-top: 10px;
     margin-bottom: 10px;

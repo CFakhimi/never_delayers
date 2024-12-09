@@ -53,6 +53,17 @@
                 </div>
             </div>
 
+            <datalist id="airlines">
+                {% for airline in airlines %}
+                    <option value={{airline}}>
+                {% endfor %}
+                <!-- <option value="American">
+                <option value="Delta">
+                <option value="United">
+                <option value="Southwest"> -->
+                <option value="No Index Airline">
+            </datalist>
+
             <!-- Predict your delay form -->
             <form class="dataInput active" id="predict" action="{{ url_for('home') }}" method="POST">
                 <input type="hidden" name="form_type" value="predict_delay">
@@ -60,16 +71,12 @@
                 <h3>Enter Your Flight Info to Get Our Prediction!</h3>
                 
                 <input list="airlines" id="airline" name="airline" required placeholder="Airline (e.g. United)">
-                <datalist id="airlines">
+                <!-- <select id="airline" name="airline" required>
                     {% for airline in airlines %}
                         <option value={{airline}}>
                     {% endfor %}
-                    <!-- <option value="American">
-                    <option value="Delta">
-                    <option value="United">
-                    <option value="Southwest"> -->
                     <option value="No Index Airline">
-                </datalist>
+                </select> -->
 
     
                 <input type="text" id="origin" maxlength="3" name="origin" required placeholder="Origin Airport (e.g. SFO) ">
