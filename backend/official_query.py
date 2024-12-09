@@ -1,4 +1,5 @@
 import pymysql
+from datetime import datetime
 
 # Globals
 HOST = "localhost"
@@ -140,10 +141,24 @@ def average_delay(cursor, origin, destination, airline, flight_date=None):
     '''
     table_name = "flight_info"
     
+    date = datetime.strptime(flight_date, "%Y-%m-%d")
+    month = date.month
     your_delay_query = f"""
-    SELECT AVG(DelayMinutes)
-    FROM {table_name}
-    WHERE Origin = %s AND Destination = %s AND Airline = %s
+    WITH ranked_data AS (
+    SELECT 
+        DelayMinutes,
+        ROW_NUMBER() OVER (ORDER BY DelayMinutes) AS row_num,
+        COUNT(*) OVER () AS total_rows
+    FROM (SELECT DelayMinutes
+        FROM {table_name}
+        WHERE Origin = %s AND Destination = %s AND Airline = %s AND month(DepartureDate) = %s) as X)
+    SELECT 
+        avg(DelayMinutes)
+    FROM 
+        ranked_data
+    WHERE 
+        row_num > total_rows * 0.1
+        AND row_num <= total_rows * 0.9
     """
     cursor.execute(your_delay_query, (origin, destination, airline))
     user_avg_delay = cursor.fetchone()[0]
@@ -161,12 +176,26 @@ def average_delay_numeric(cursor, origin, destination, airline, flight_date=None
     '''
     table_name = "flight_info"
     
+    date = datetime.strptime(flight_date, "%Y-%m-%d")
+    month = date.month
     your_delay_query = f"""
-    SELECT AVG(DelayMinutes)
-    FROM {table_name}
-    WHERE Origin = %s AND Destination = %s AND Airline = %s
+    WITH ranked_data AS (
+    SELECT 
+        DelayMinutes,
+        ROW_NUMBER() OVER (ORDER BY DelayMinutes) AS row_num,
+        COUNT(*) OVER () AS total_rows
+    FROM (SELECT DelayMinutes
+        FROM {table_name}
+        WHERE Origin = %s AND Destination = %s AND Airline = %s AND month(DepartureDate) = %s) as X)
+    SELECT 
+        avg(DelayMinutes)
+    FROM 
+        ranked_data
+    WHERE 
+        row_num > total_rows * 0.1
+        AND row_num <= total_rows * 0.9
     """
-    cursor.execute(your_delay_query, (origin, destination, airline))
+    cursor.execute(your_delay_query, (origin, destination, airline, month))
     user_avg_delay = cursor.fetchone()[0]
     
     return user_avg_delay
@@ -370,7 +399,7 @@ if __name__ == "__main__":
     #print(insert_flight(userID, delayMinutes, airline, origin, destination, departureDate))
     #print(delete_flight("Fake", "3000008"))
     #print(validate_user(userID, password))
-    print(airline_to_iata('FFT'))
+    print(average_delay_numeric('PIT', 'ATL', 'Delta', '2024-10-15'))
 
 
 
