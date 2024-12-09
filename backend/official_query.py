@@ -141,25 +141,44 @@ def average_delay(cursor, origin, destination, airline, flight_date=None):
     '''
     table_name = "flight_info"
     
-    date = datetime.strptime(flight_date, "%Y-%m-%d")
-    month = date.month
-    your_delay_query = f"""
-    WITH ranked_data AS (
-    SELECT 
-        DelayMinutes,
-        ROW_NUMBER() OVER (ORDER BY DelayMinutes) AS row_num,
-        COUNT(*) OVER () AS total_rows
-    FROM (SELECT DelayMinutes
-        FROM {table_name}
-        WHERE Origin = %s AND Destination = %s AND Airline = %s AND month(DepartureDate) = %s) as X)
-    SELECT 
-        avg(DelayMinutes)
-    FROM 
-        ranked_data
-    WHERE 
-        row_num > total_rows * 0.1
-        AND row_num <= total_rows * 0.9
-    """
+    if flight_date:
+        date = datetime.strptime(flight_date, "%Y-%m-%d")
+        month = date.month
+        your_delay_query = f"""
+        WITH ranked_data AS (
+        SELECT 
+            DelayMinutes,
+            ROW_NUMBER() OVER (ORDER BY DelayMinutes) AS row_num,
+            COUNT(*) OVER () AS total_rows
+        FROM (SELECT DelayMinutes
+            FROM {table_name}
+            WHERE Origin = %s AND Destination = %s AND Airline = %s AND month(DepartureDate) = %s) as X)
+        SELECT 
+            avg(DelayMinutes)
+        FROM 
+            ranked_data
+        WHERE 
+            row_num > total_rows * 0.1
+            AND row_num <= total_rows * 0.9
+        """
+    else:
+        your_delay_query = f"""
+        WITH ranked_data AS (
+        SELECT 
+            DelayMinutes,
+            ROW_NUMBER() OVER (ORDER BY DelayMinutes) AS row_num,
+            COUNT(*) OVER () AS total_rows
+        FROM (SELECT DelayMinutes
+            FROM {table_name}
+            WHERE Origin = %s AND Destination = %s AND Airline = %s) as X)
+        SELECT 
+            avg(DelayMinutes)
+        FROM 
+            ranked_data
+        WHERE 
+            row_num > total_rows * 0.1
+            AND row_num <= total_rows * 0.9
+        """
     cursor.execute(your_delay_query, (origin, destination, airline))
     user_avg_delay = cursor.fetchone()[0]
     
@@ -176,25 +195,44 @@ def average_delay_numeric(cursor, origin, destination, airline, flight_date=None
     '''
     table_name = "flight_info"
     
-    date = datetime.strptime(flight_date, "%Y-%m-%d")
-    month = date.month
-    your_delay_query = f"""
-    WITH ranked_data AS (
-    SELECT 
-        DelayMinutes,
-        ROW_NUMBER() OVER (ORDER BY DelayMinutes) AS row_num,
-        COUNT(*) OVER () AS total_rows
-    FROM (SELECT DelayMinutes
-        FROM {table_name}
-        WHERE Origin = %s AND Destination = %s AND Airline = %s AND month(DepartureDate) = %s) as X)
-    SELECT 
-        avg(DelayMinutes)
-    FROM 
-        ranked_data
-    WHERE 
-        row_num > total_rows * 0.1
-        AND row_num <= total_rows * 0.9
-    """
+    if flight_date:
+        date = datetime.strptime(flight_date, "%Y-%m-%d")
+        month = date.month
+        your_delay_query = f"""
+        WITH ranked_data AS (
+        SELECT 
+            DelayMinutes,
+            ROW_NUMBER() OVER (ORDER BY DelayMinutes) AS row_num,
+            COUNT(*) OVER () AS total_rows
+        FROM (SELECT DelayMinutes
+            FROM {table_name}
+            WHERE Origin = %s AND Destination = %s AND Airline = %s AND month(DepartureDate) = %s) as X)
+        SELECT 
+            avg(DelayMinutes)
+        FROM 
+            ranked_data
+        WHERE 
+            row_num > total_rows * 0.1
+            AND row_num <= total_rows * 0.9
+        """
+    else:
+        your_delay_query = f"""
+        WITH ranked_data AS (
+        SELECT 
+            DelayMinutes,
+            ROW_NUMBER() OVER (ORDER BY DelayMinutes) AS row_num,
+            COUNT(*) OVER () AS total_rows
+        FROM (SELECT DelayMinutes
+            FROM {table_name}
+            WHERE Origin = %s AND Destination = %s AND Airline = %s) as X)
+        SELECT 
+            avg(DelayMinutes)
+        FROM 
+            ranked_data
+        WHERE 
+            row_num > total_rows * 0.1
+            AND row_num <= total_rows * 0.9
+        """
     cursor.execute(your_delay_query, (origin, destination, airline, month))
     user_avg_delay = cursor.fetchone()[0]
     
