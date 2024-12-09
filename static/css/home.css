@@ -7,7 +7,7 @@ html, body {
     margin: 0;
     padding: 0;
     height: 100%;
-    overflow-x: hidden; 
+    /* overflow-x: hidden;  */
 }
 
 /* Gradient background on body */
@@ -19,6 +19,7 @@ body {
     background: linear-gradient(135deg, #FFD700, #FF1493); */
     background: linear-gradient(135deg, #e0f7fa, #b2ebf2);
     /* background: linear-gradient(135deg, #FFFACD, #FFC0CB); */
+    overflow-x: scroll;
 }
 
 button:hover {
@@ -54,7 +55,7 @@ button:hover {
     justify-content: center;
     align-content: center;
     /* position: relative; */
-    position: fixed;
+    position: absolute;
     background-color: aliceblue;
     /* min-width: 160px; */
     min-width: 330px;
@@ -130,39 +131,44 @@ button:hover {
     width: 200px;
     /* margin: 0 auto; */
     margin: 0 100px; 
+    /* margin-bottom: 10px; */
     border-radius: 8px;
 }
 
-.dataInput[id="delayEdit"] .form {
+.dataInput[id="edit"] .form {
     display: inline-block;
 }
 
-.dataInput[id="delayEdit"] label {
+.dataInput[id="edit"] label {
     display: inline-block;
 }
 
-.dataInput[id="delayEdit"] select {
+.dataInput[id="edit"] select {
     display: inline-block;
+    width: 150px;
     margin-right: 12px;
     border-radius: 8px;
 }
 
-.dataInput[id="delayEdit"] input {
+.dataInput[id="edit"] input {
     display: inline-block;
-    width: auto;
+    width: 150px;
     margin-right: 12px;
     border-radius: 8px;
 }
 
-.dataInput[id="delayEdit"] button {
+.dataInput[id="edit"] button {
     width: auto;
-    display: inline;
-    margin-bottom: 30px;
+    display: inline-block;
+    margin-left: 0;
+    margin-right: 0;
+    /* margin-bottom: 30px; */
     border-radius: 8px;
 }
 
-.deleteButton {
-    display: inline-block;
+.dataInput[id="delete"] button {
+    display: block;
+    width: 80px;
     border-radius: 8px;
 }
 

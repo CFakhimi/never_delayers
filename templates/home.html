@@ -46,10 +46,10 @@
                     Predict My Delay <span class="arrow">&#9662;</span>
                 </button>
                 <div class="formDropdownContent" id="formSelect" onmouseover="showDropdown()" onmouseout="hideDropdown()">
-                    <a href="#" class="dataForm" form-type="predict" onclick="selectOption(event, this)">Predict My Delay</a>
-                    <a href="#" class="dataForm" form-type="upload" onclick="selectOption(event, this)">Just Landed? Upload My Flight</a>
-                    <a href="#" class="dataForm" form-type="edit" onclick="selectOption(event, this)">Edit My Uploaded Flights</a>
-                    <a href="#" class="dataForm" form-type="delete" onclick="selectOption(event, this)">Delete An Uploaded Flight</a>
+                    <a href="#" class="dataForm" id="predictButton" form-type="predict" onclick="selectOption(this)">Predict My Delay</a>
+                    <a href="#" class="dataForm" id="uploadButton" form-type="upload" onclick="selectOption(this)">Just Landed? Upload My Flight</a>
+                    <a href="#" class="dataForm" id="editButton" form-type="edit" onclick="selectOption(this)">Edit My Uploaded Flights</a>
+                    <a href="#" class="dataForm" id="deleteButton" form-type="delete" onclick="selectOption(this)">Delete An Uploaded Flight</a>
                 </div>
             </div>
 
@@ -96,13 +96,13 @@
                 {% else %}
                     <h3>Just Landed? Upload Your Flight</h3>
                     <label>Enter Airline:</label>
-                    <input list="airlines" name="airline" required>
+                    <input list="airlines" id="airline" name="airline" required placeholder="Airline (e.g. United)">
                     
                     <label>Origin Airport (3-letter code):</label>
-                    <input type="text" maxlength="3" name="origin" required>
+                    <input type="text" id="origin" maxlength="3" name="origin" required placeholder="Origin Airport (e.g. SFO) ">
 
                     <label>Destination Airport (3-letter code):</label>
-                    <input type="text" maxlength="3" name="destination" required>
+                    <input type="text" id="destination" maxlength="3" name="destination" required placeholder="Destination Airport (e.g. LAX)">
 
                     <label>Departure Date:</label>
                     <input type="date" name="departureDate" required>
@@ -128,15 +128,17 @@
                                         <input type="hidden" name="form_type" value="edit_flight">
                                         <input type="hidden" name="flight_id" value="{{ flight.id }}">
                                         <label>Attribute to Edit:</label>
-                                        <select name="attribute">
+                                        <select name="attribute" id="attributeSelection" onchange="getInputType()">
                                             <option value="Airline">Airline</option>
                                             <option value="Origin">Origin</option>
                                             <option value="Destination">Destination</option>
                                             <option value="DepartureDate">Departure Date</option>
                                             <option value="DelayMinutes">Delay Minutes</option>
                                         </select>
-                                        <label>New Value:</label>
-                                        <input type="text" name="new_value" required>
+                                        <label for="new_value">New Value:</label>
+                                        <div id="editInputContainer" style="display: inline">
+                                            <input type='text' maxlength='255' name='new_value' placeholder='Enter new airline' required>
+                                        </div>
                                         <button type="submit">Edit</button>
                                     </form>
                                 </li>
