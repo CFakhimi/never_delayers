@@ -3,6 +3,7 @@
 <head>
     <title>Behold the Delays</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/data_visualization.css') }}" />
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/navbar.css') }}" />
     <script src="https://d3js.org/d3.v7.min.js"></script>
     <style>
         /* Tooltip styling */
@@ -21,7 +22,9 @@
 </head>
 <body>
     <div class="header">
-        <h1>Lovely Lovely Graphs</h1>
+        <div class="header-inner">
+            <h1>Behold the Data &nbsp; Behold the Data &nbsp; Behold the Data &nbsp; Behold the Data &nbsp; Behold the Data &nbsp; Behold the Data &nbsp; Behold the Data &nbsp; Behold the Data &nbsp; Behold the Data &nbsp; Behold the Data &nbsp; Behold the Data</h1>
+        </div>
     </div>
 
     <div class="navbar"> 
@@ -113,7 +116,7 @@
 
     createChart("#svg1", sortedData, (d) => `${d.label}: ${d.value.toFixed(2)} mins`);
 
-    // ** Updated Data for Chart 2: Predicted Accuracy by Date **
+    // Updated Data for Chart 2: Predicted Accuracy by Date (Percentage)
     const predictedAccuracyData = [
         { label: "2024-12-01", value: 68.06 },
         { label: "2024-12-02", value: 72.86 },
@@ -136,7 +139,7 @@
 
     createChart("#svg3", topRoutesData, (d) => `${d.value.toFixed(2)} mins`);
 
-    // Function to create a chart with D3.js
+    // Function to create a chart with D3.js and add a y-axis label
     function createChart(svgId, data, tooltipFormatter) {
         const svg = d3.select(svgId)
             .attr("width", "100%")
@@ -174,6 +177,21 @@
             .selectAll("text")
             .style("font-size", "1.2rem");
 
+        // Determine y-axis label based on which chart it is
+        let yLabel = "Minutes";  // Default
+        if (svgId === "#svg2") {
+            yLabel = "Percentage Correct";
+        }
+
+        // Add Y axis label
+        chart.append("text")
+            .attr("transform", "rotate(-90)")
+            .attr("y", -margin.left + 20)
+            .attr("x", -height / 2)
+            .style("text-anchor", "middle")
+            .style("font-size", "1rem")
+            .text(yLabel);
+
         chart.selectAll(".bar")
             .data(data)
             .enter().append("rect")
@@ -182,7 +200,7 @@
             .attr("y", d => y(d.value))
             .attr("width", x.bandwidth())
             .attr("height", d => height - y(d.value))
-            .attr("fill", "darkred")
+            .attr("fill", "#6a3093")  // Use purple instead of red
             .on("mouseover", (event, d) => {
                 tooltip.transition().duration(200).style("opacity", 1);
                 tooltip.html(tooltipFormatter(d))
@@ -198,7 +216,6 @@
             });
     }
 });
-
     </script>
 </body>
 </html>

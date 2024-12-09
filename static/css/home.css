@@ -7,74 +7,30 @@ html, body {
     margin: 0;
     padding: 0;
     height: 100%;
-    overflow-x: hidden; /* Prevent horizontal scrollbar */
-
+    overflow-x: hidden; 
 }
 
+/* Gradient background on body */
 body {
     display: flex;
     flex-direction: column;
     min-height: 100vh;
+    background: linear-gradient(135deg, #e0f7fa, #b2ebf2);
 }
 
-.header {
-    margin: 0;
-    padding: 5px;
-    width: 100%;
-    text-align: center;
-    background-color: #565e9d; 
-    /*border-bottom: 1px solid black;*/
-    color: #9df2d3;
-    font-size: 20px;
-}
-
-/* add opacity to hovering over buttons */
 button:hover {
     opacity: 80%
 }
 
-/*** Navbar Stuff ***/
-
-.navbar {
-    background-color: dimgray;
-    border-top: 2px solid black;
-    border-bottom: 2px solid black;
-}
-
-.navbar a {
-    float:left;
-    font-size: 18px;
-    color: white;
-    text-align: center;
-    padding: 14px 16px;
-    text-decoration: none;
-}
-
-.navbar a:hover {
-    background-color: red;
-}
-
-.nav-right {
-    float: right;
-    margin-right: 20px;
-    padding-left: 10px;
-    padding-right: 10px;
-    color: white;
-}
-
-/*** Dropdown Menu Stuff ***/
-
-/* Dropdown container */
+/*** Dropdown Menu Stuff (For Form Selection) ***/
 .formDropdown {
     display: block;
     float: none;
-    align-content: center;
     text-align: center;
     justify-content: center;
     margin-top: 20px;
 }
 
-/* Dropdown button */
 .formDropdown .formDropdownButton {
     width: 200px;
     background-color: green;
@@ -84,9 +40,9 @@ button:hover {
     font-family: inherit;
     margin: 0;
     border: 2px solid black;
+    border-radius: 8px;
 }
 
-/* Dropdown content */
 .formDropdownContent {
     scroll-behavior: smooth;
     display: none;
@@ -99,7 +55,6 @@ button:hover {
     z-index: 1;
 }
 
-/* Dropdown links */
 .formDropdownContent a {
     float: none;
     color: black;
@@ -109,57 +64,61 @@ button:hover {
     text-align: center;
 }
 
-/* Change color of dropdown links on hover */
 .formDropdownContent a:hover {
     background-color: red;
+}
+
+/*** Content Layout ***/
+.content {
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    margin-top: 20px;
+}
+
+.left-section {
+    display: flex;
+    flex-direction: column;
 }
 
 /*** Form Stuff ***/
 .dataInput {
     display: none;
-    float: none;
     padding: 12px 20px;
-    margin-left: auto;
-    margin-right: auto;
     margin-top: 10px;
     margin-bottom: 10px;
     text-align: left;
+    width: 400px; 
 }
 
-/** Display first option by default */
 .dataInput.active {
     display: block;
 }
 
 .dataInput input {
     display: block;
-    margin: auto;
     margin-top: 10px;
     margin-bottom: 10px;
     text-align: center;
-    align-content: center;
-    justify-content: center;
     border: 1px solid black;
     padding: 12px 20px;
-    box-sizing: border-box;
     width: 400px;
+    border-radius: 8px;
 }
 
 .dataInput button[type="submit"] {
     display: block;
-    margin: auto;
     margin-bottom: 12px;
-    background-color: dodgerblue;
+    color: white;
+    background-color: #1565c0;
     text-align: center;
-    align-content: center;
-    justify-content: center;
     border: 1px solid black;
     padding: 12px 20px;
-    box-sizing: border-box;
     width: 200px;
+    margin: 0 auto; 
+    border-radius: 8px;
 }
 
-/* Extra styles for edit form */
 .dataInput[id="delayEdit"] .form {
     display: inline-block;
 }
@@ -171,35 +130,69 @@ button:hover {
 .dataInput[id="delayEdit"] select {
     display: inline-block;
     margin-right: 12px;
+    border-radius: 8px;
 }
 
 .dataInput[id="delayEdit"] input {
     display: inline-block;
     width: auto;
     margin-right: 12px;
+    border-radius: 8px;
 }
 
 .dataInput[id="delayEdit"] button {
     width: auto;
     display: inline;
     margin-bottom: 30px;
+    border-radius: 8px;
 }
 
-/* Have delete buttons inline with each data entry */
 .deleteButton {
     display: inline-block;
+    border-radius: 8px;
 }
 
+/*** Result Section ***/
+.result-section {
+    width: 400px;
+    height: 300px;
+    background-color: #1565c0; 
+    border: 2px solid #fff;
+    margin-left: 100px; 
+    margin-top: 100px; 
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    padding: 20px;
+    border-radius: 12px;
+}
+
+.result-section h2 {
+    font-size: 24px;
+    color: #fff;
+    margin-bottom: 20px;
+    font-family: Arial, sans-serif;
+}
+
+.result-text {
+    font-size: 22px;
+    font-weight: bold;
+    color: #fff;
+    font-family: Arial, sans-serif;
+    line-height: 1.4;
+}
+
+/*** Footer ***/
 .footer {
     text-align: center;
     padding: 10px;
-    background-color: #f1f1f1; /* Optional background color */
+    background-color: #f1f1f1; 
     position: relative;
     bottom: 0;
     width: 100%;
 }
-
-
 
 /* Add Zoom Animation */
 .animate {
