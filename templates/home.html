@@ -137,6 +137,33 @@
                     {% endif %}
                 {% endif %}
             </div>
+
+            <!-- Delete an uploaded flights form -->
+            <div class="dataInput" id="delete">
+                <h3>Delete a Flight</h3>
+                {% if userID == 'Not logged in' %}
+                    <p>Please log in to view your flights.</p>
+                {% else %}
+                    {% if user_flights %}
+                        <ul>
+                            {% for flight in user_flights %}
+                                <li>
+                                    Flight ID: {{ flight.id }}, Airline: {{ flight.airline }}, Origin: {{ flight.origin }}, Destination: {{ flight.destination }}, Date: {{ flight.departure_date }}
+                                    <form action="{{ url_for('home') }}" method="POST" style="display: inline;">
+                                        <input type="hidden" name="form_type" value="delete_flight">
+                                        <input type="hidden" name="flight_id" value="{{ flight.id }}">
+                                        <button type="submit" class="deleteButton">
+                                            Delete
+                                        </button>
+                                    </form>
+                                </li>
+                            {% endfor %}
+                        </ul>
+                    {% else %}
+                        <p>No flights found.</p>
+                    {% endif %}
+                {% endif %}
+            </div>
         </div>
 
         <div class="result-section">

@@ -6,23 +6,25 @@
         <link rel="stylesheet" href="{{ url_for('static', filename='css/navbar.css') }}" />
     </head>
     <body>
-        <div class="header">
-            <h1>Create Your Account:</h1>
-        </div>
-        <div class="loginStuff">
-            <form action="{{ url_for('create_account') }}" method="POST" class="accountInfo">
-                <label for="uname"><b>Username:</b></label>
-                <input type="text" placeholder="Enter Username" name="uname" required>
-                <label for="pswd"><b>Password:</b></label>
-                <input type="password" placeholder="Enter Password" name="pswd" required>
-                <label for="pswd"><b>Confirm Password:</b></label>
-                <input type="password" placeholder="Enter Password" name="pswdConfirm" required>
-                <br>
-                <button type="submit">Create Account</button>
-            </form>
-            <form action="{{ url_for('home') }}" method="GET" class="return">
-                <button type="submit">Cancel</button>
-            </form>
+        <div class="content">
+            <div class="header">
+                <h1>Create Your Account:</h1>
+            </div>
+            <div class="loginStuff">
+                <form action="{{ url_for('create_account') }}" method="POST" class="accountInfo">
+                    <label for="uname"><b>Username:</b></label>
+                    <input type="text" placeholder="Enter Username" name="uname" required>
+                    <label for="pswd"><b>Password:</b></label>
+                    <input type="password" placeholder="Enter Password" name="pswd" required>
+                    <label for="pswd"><b>Confirm Password:</b></label>
+                    <input type="password" placeholder="Enter Password" name="pswdConfirm" required>
+                    <br>
+                    <button type="submit">Create Account</button>
+                </form>
+                <form action="{{ url_for('home') }}" method="GET" class="return">
+                    <button type="submit">Cancel</button>
+                </form>
+            </div>
         </div>
     </body>
 </html>
