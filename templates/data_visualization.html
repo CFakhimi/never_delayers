@@ -30,7 +30,7 @@
     <div class="navbar"> 
         <a href="/login" method="GET">Login</a>
         <a href="/create_account" method="GET">Create an Account</a>
-        <a href="/" method="GET">Back to Home</a>
+        <a href="/home" method="GET">Back to Home</a>
         <div class="nav-right">
             <p><b>User: {{ userID }}</b></p>
         </div>
@@ -111,19 +111,20 @@
 
     const sortedData = airlines
         .map((airline, i) => ({ label: airline, value: airlineDelays[i] }))
-        .sort((a, b) => a.value - b.value)
-        .slice(0, -1);
+        .sort((a, b) => a.value - b.value);
+        //.slice(0, -1);
 
     createChart("#svg1", sortedData, (d) => `${d.label}: ${d.value.toFixed(2)} mins`);
 
     // Updated Data for Chart 2: Predicted Accuracy by Date (Percentage)
     const predictedAccuracyData = [
-        { label: "2024-12-01", value: 68.06 },
-        { label: "2024-12-02", value: 72.86 },
-        { label: "2024-12-03", value: 75.00 },
-        { label: "2024-12-04", value: 61.54 },
-        { label: "2024-12-05", value: 72.73 },
-        { label: "2024-12-06", value: 60.94 }
+        { label: "2024-12-01", value: 77.77 },
+        { label: "2024-12-02", value: 91.42 },
+        { label: "2024-12-03", value: 92.64 },
+        { label: "2024-12-04", value: 80.00 },
+        { label: "2024-12-05", value: 83.33 },
+        { label: "2024-12-06", value: 79.68 },
+        { label: "2024-12-07", value: 72.58}
     ];
 
     createChart("#svg2", predictedAccuracyData, (d) => `${d.value.toFixed(2)}%`);

@@ -170,11 +170,7 @@ def top_route_delays(cursor):
 
 @db_connection
 def average_delay(cursor, origin, destination, airline, flight_date=None): 
-    '''
-    cursor, origin, desintation,airline
-    '''
     table_name = "flight_info"
-    
     your_delay_query = f"""
     SELECT AVG(DelayMinutes)
     FROM {table_name}
@@ -182,12 +178,21 @@ def average_delay(cursor, origin, destination, airline, flight_date=None):
     """
     cursor.execute(your_delay_query, (origin, destination, airline))
     user_avg_delay = cursor.fetchone()[0]
-    
-    if user_avg_delay is None:
-        #print("No data available for the specified query.")
-        return "No delay data available for that flight path."
 
-    return f"Average delay for {airline} from {origin} to {destination}: {user_avg_delay} minutes"
+    if user_avg_delay is None:
+        # No data found
+        return None
+
+    # Return data as a dictionary
+    data = {
+        "airline": airline,
+        "origin": origin,
+        "destination": destination,
+        "flight_date": flight_date,
+        "average_delay": user_avg_delay
+    }
+
+    return data
 
 @db_connection
 def delay_compare(cursor, origin, destination, airline):

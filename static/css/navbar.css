@@ -29,10 +29,10 @@
     position: absolute;
     font-size: 2rem;
     margin: 0;
-    color: #ffffff; /* Ensure text is white */
-    top: 50%; /* Position it vertically centered */
-    transform: translateY(-50%); /* Adjust vertical centering */
-    animation: marquee 10s linear infinite; /* Faster speed (10s) */
+    color: #ffffff; 
+    top: 50%; 
+    transform: translateY(-50%); 
+    animation: marquee 40s linear infinite; /* For speed */
 }
 
 @keyframes marquee {

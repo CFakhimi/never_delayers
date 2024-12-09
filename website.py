@@ -37,6 +37,7 @@ def home(): # This is the home page!!!
 
             result = average_delay(origin, destination, airline, flight_date)
             print(f"Average delay is {result}")
+            result = format_delay_info(result)
             #flash(f'Prediction: The average delay for this flight is {result}.')
 
         elif form_type == 'upload_flight':
@@ -143,14 +144,34 @@ def data_page():
     #print(averageAirlineDelays)
     return render_template('data_visualization.html', userID=userID, airlines=airlines, averageAirlineDelays=averageAirlineDelays, top_routes=top_routes)
 
-# # Setup an asynchronous call for queries to speed up page loading time
-# # Need to install the async extra to do this
-#@app.route('/airline_avg_delays', methods=['GET'])
-#async def airline_avg_delays_graph():
-#    average_delay_by_airline = all_airline_average_delays()
-#    print(type(average_delay_by_airline))
-#    print(average_delay_by_airline)
-#    return average_delay_by_airline 
+def format_delay_info(data):
+    if data is None:
+        return """
+            <p class="no-delay-text">No delay data available for this flight path.</p>
+            <p class="emote">😢</p>
+        """
+
+    flight_date_info = f"<p style='font-size:0.8em; font-family:Arial, sans-serif;'><strong>Date:</strong> {data['flight_date']}</p>" if data['flight_date'] else ""
+
+    avg_delay = data['average_delay']
+    if avg_delay > 15:
+        color = "red"
+    elif avg_delay > 5:
+        color = "yellow"
+    else:
+        color = "green"
+
+    text_style = f"color:{color}; text-shadow: 1px 1px 2px black;"
+
+    return f"""
+        <p class="result-text"><strong>Airline:</strong> {data['airline']}</p>
+        <p class="result-text"><strong>Origin:</strong> {data['origin']}</p>
+        <p class="result-text"><strong>Destination:</strong> {data['destination']}</p>
+        {flight_date_info}
+        <p class="predicted-delay"><strong>Predicted Delay:</strong> <span style="{text_style}">{avg_delay:.2f} min</span></p>
+    """
+
+
 
 if __name__ == '__main__':
     top_routes = top_route_delays()
