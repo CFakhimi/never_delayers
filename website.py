@@ -1,7 +1,10 @@
 from flask import Flask, render_template, request, session, jsonify
 from flask import redirect, url_for # For better redirects
 from flask import flash # Quick user messages
-from backend.official_query import all_airline_average_delays, average_delay, insert_flight, get_user_flights, delete_flight, edit_flight, validate_user, create_user, top_route_delays
+from backend.official_query import all_airline_average_delays, average_delay, insert_flight, \
+                                    get_user_flights, delete_flight, edit_flight, \
+                                    validate_user, create_user, top_route_delays, \
+                                    get_airlines
 import os
 import json
 
@@ -81,7 +84,7 @@ def home(): # This is the home page!!!
             flash(result)
             return redirect(url_for('home'))
 
-    return render_template('home.html', userID=userID, result=result, user_flights=user_flights)
+    return render_template('home.html', userID=userID, result=result, user_flights=user_flights, airlines=airline_names)
 
 @app.route('/login', methods=['GET'])
 def login():
@@ -176,4 +179,5 @@ def format_delay_info(data):
 if __name__ == '__main__':
     top_routes = top_route_delays()
     average_delay_by_airline = all_airline_average_delays()
-    app.run(host='db8.cse.nd.edu', debug=True, port="5014")
+    airline_names = get_airlines()
+    app.run(host='db8.cse.nd.edu', debug=True, port="5013")

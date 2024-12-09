@@ -132,6 +132,23 @@ def get_user_flights(cursor, userID):
 
     return your_flights
    
+# Returns all airlines present in the database
+@db_connection
+def get_airlines(cursor):
+    table_name = "airlines"
+
+    airlines_query = f"""
+    SELECT DISTINCT Name
+    FROM {table_name}
+    """
+
+    cursor.execute(airlines_query)
+    all_airlines = cursor.fetchall()
+
+    airline_names = [airline[0] for airline in all_airlines]
+
+    return airline_names
+
 # Returns a dictionary in the form of {Airline: DelayMinutes}
 @db_connection
 def all_airline_average_delays(cursor):

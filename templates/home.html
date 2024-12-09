@@ -61,10 +61,13 @@
                 
                 <input list="airlines" id="airline" name="airline" required placeholder="Airline (e.g. United)">
                 <datalist id="airlines">
-                    <option value="American">
+                    {% for airline in airlines %}
+                        <option value={{airline}}>
+                    {% endfor %}
+                    <!-- <option value="American">
                     <option value="Delta">
                     <option value="United">
-                    <option value="Southwest">
+                    <option value="Southwest"> -->
                     <option value="No Index Airline">
                 </datalist>
 
