@@ -1,4 +1,5 @@
 import pymysql
+from datetime import datetime
 
 # Globals
 HOST = "localhost"
@@ -188,12 +189,47 @@ def top_route_delays(cursor):
 @db_connection
 def average_delay(cursor, origin, destination, airline, flight_date=None): 
     table_name = "flight_info"
-    your_delay_query = f"""
-    SELECT AVG(DelayMinutes)
-    FROM {table_name}
-    WHERE Origin = %s AND Destination = %s AND Airline = %s
-    """
-    cursor.execute(your_delay_query, (origin, destination, airline))
+    
+    if flight_date:
+        date = datetime.strptime(flight_date, "%Y-%m-%d")
+        month = date.month
+        your_delay_query = f"""
+        WITH ranked_data AS (
+        SELECT 
+            DelayMinutes,
+            ROW_NUMBER() OVER (ORDER BY DelayMinutes) AS row_num,
+            COUNT(*) OVER () AS total_rows
+        FROM (SELECT DelayMinutes
+            FROM {table_name}
+            WHERE Origin = %s AND Destination = %s AND Airline = %s AND month(DepartureDate) = %s) as X)
+        SELECT 
+            avg(DelayMinutes)
+        FROM 
+            ranked_data
+        WHERE 
+            row_num > total_rows * 0.1
+            AND row_num <= total_rows * 0.9
+        """
+        cursor.execute(your_delay_query, (origin, destination, airline, month))
+    else:
+        your_delay_query = f"""
+        WITH ranked_data AS (
+        SELECT 
+            DelayMinutes,
+            ROW_NUMBER() OVER (ORDER BY DelayMinutes) AS row_num,
+            COUNT(*) OVER () AS total_rows
+        FROM (SELECT DelayMinutes
+            FROM {table_name}
+            WHERE Origin = %s AND Destination = %s AND Airline = %s) as X)
+        SELECT 
+            avg(DelayMinutes)
+        FROM 
+            ranked_data
+        WHERE 
+            row_num > total_rows * 0.1
+            AND row_num <= total_rows * 0.9
+        """
+        cursor.execute(your_delay_query, (origin, destination, airline))
     user_avg_delay = cursor.fetchone()[0]
 
     if user_avg_delay is None:
@@ -212,8 +248,136 @@ def average_delay(cursor, origin, destination, airline, flight_date=None):
     return data
 
 @db_connection
+def average_delay_numeric(cursor, origin, destination, airline, flight_date=None): 
+    '''
+    cursor, origin, desintation,airline
+    '''
+    table_name = "flight_info"
+    
+    if flight_date:
+        date = datetime.strptime(flight_date, "%Y-%m-%d")
+        month = date.month
+        your_delay_query = f"""
+        WITH ranked_data AS (
+        SELECT 
+            DelayMinutes,
+            ROW_NUMBER() OVER (ORDER BY DelayMinutes) AS row_num,
+            COUNT(*) OVER () AS total_rows
+        FROM (SELECT DelayMinutes
+            FROM {table_name}
+            WHERE Origin = %s AND Destination = %s AND Airline = %s AND month(DepartureDate) = %s) as X)
+        SELECT 
+            avg(DelayMinutes)
+        FROM 
+            ranked_data
+        WHERE 
+            row_num > total_rows * 0.1
+            AND row_num <= total_rows * 0.9
+        """
+        cursor.execute(your_delay_query, (origin, destination, airline, month))
+    else:
+        your_delay_query = f"""
+        WITH ranked_data AS (
+        SELECT 
+            DelayMinutes,
+            ROW_NUMBER() OVER (ORDER BY DelayMinutes) AS row_num,
+            COUNT(*) OVER () AS total_rows
+        FROM (SELECT DelayMinutes
+            FROM {table_name}
+            WHERE Origin = %s AND Destination = %s AND Airline = %s) as X)
+        SELECT 
+            avg(DelayMinutes)
+        FROM 
+            ranked_data
+        WHERE 
+            row_num > total_rows * 0.1
+            AND row_num <= total_rows * 0.9
+        """
+        cursor.execute(your_delay_query, (origin, destination, airline))
+
+    user_avg_delay = cursor.fetchone()[0]
+    
+    return user_avg_delay
+
+@db_connection
+def compare_flights(cursor, origin, destination, flight_date):
+
+    table_name = "flight_info"
+    
+    if flight_date:
+        date = datetime.strptime(flight_date, "%Y-%m-%d")
+        month = date.month
+        your_delay_query = f"""
+        WITH ranked_data AS (
+        SELECT 
+            DelayMinutes,
+            Airline,
+            ROW_NUMBER() OVER (PARTITION BY Airline ORDER BY DelayMinutes) AS row_num,
+            COUNT(*) OVER (PARTITION BY Airline) AS total_rows
+        FROM (SELECT DelayMinutes, Airline
+            FROM {table_name}
+            WHERE Origin = %s AND Destination = %s AND month(DepartureDate) = %s) as X)
+        SELECT 
+            Airline, avg(DelayMinutes)
+        FROM 
+            ranked_data
+        WHERE 
+            row_num > total_rows * 0.1
+            AND row_num <= total_rows * 0.9
+        GROUP BY
+            Airline
+        ORDER BY 
+            avg(DelayMinutes)
+        """
+        cursor.execute(your_delay_query, (origin, destination, month))
+    else:
+        your_delay_query = f"""
+        WITH ranked_data AS (
+        SELECT 
+            DelayMinutes,
+            Airline,
+            ROW_NUMBER() OVER (PARTITION BY Airline ORDER BY DelayMinutes) AS row_num,
+            COUNT(*) OVER (PARTITION BY Airline) AS total_rows
+        FROM (SELECT DelayMinutes, Airline
+            FROM {table_name}
+            WHERE Origin = %s AND Destination = %s) as X)
+        SELECT 
+            Airline, avg(DelayMinutes)
+        FROM 
+            ranked_data
+        WHERE 
+            row_num > total_rows * 0.1
+            AND row_num <= total_rows * 0.9
+        GROUP BY
+            Airline
+        ORDER BY
+            avg(DelayMinutes)
+        """
+        cursor.execute(your_delay_query, (origin, destination))
+
+    results = cursor.fetchall()
+    
+    if results is None:
+        #print("No data available for the specified query.")
+        return "No delay data available for that flight path."
+
+    return results
+
+@db_connection
 def delay_compare(cursor, origin, destination, airline):
     pass
+
+@db_connection
+def get_top_flights(cursor, limit=10):
+    # This takes a while for some reason
+    query = """
+    SELECT *
+    FROM top_flights
+    LIMIT %s
+    """
+    cursor.execute(query, (limit,))
+    return cursor.fetchall()
+
 
 # Returns True if user exists, false if user does not exist
 @db_connection
@@ -275,10 +439,118 @@ def validate_user(cursor, username, password):
         return "Password is valid"
     else:
         return "Password is invalid"
+    
+@db_connection
+def get_timezone(cursor, code):
+    if len(code) == 3:
+        code_type = "IATA"
+    elif len(code) == 4:
+        code_type = "ICAO"
+    else:
+        return None
+    
+    table_name = "airports"
+
+    query = f"""
+    SELECT Timezone
+    FROM {table_name}
+    WHERE {code_type} = %s
+    """
+
+    cursor.execute(query, (code))
+    timezone = cursor.fetchone()
+
+    if timezone is not None:
+        timezone = timezone[0]
+
+    return timezone
+
+@db_connection
+def airport_to_icao(cursor, code):
+    if len(code) != 3:
+        return None
+    
+    table_name = "airports"
+
+    query = f"""
+    SELECT ICAO
+    FROM {table_name}
+    WHERE IATA = %s
+    """
+
+    cursor.execute(query, (code))
+    icao_code = cursor.fetchone()
+
+    if icao_code is not None:
+        icao_code = icao_code[0]
+
+    return icao_code
+
+@db_connection
+def airport_to_iata(cursor, code):
+    if len(code) != 4:
+        return None
+    
+    table_name = "airports"
+
+    query = f"""
+    SELECT IATA
+    FROM {table_name}
+    WHERE ICAO = %s
+    """
+
+    cursor.execute(query, (code))
+    iata_code = cursor.fetchone()
+
+    if iata_code is not None:
+        iata_code = iata_code[0]
+
+    return iata_code
+
+@db_connection
+def airline_to_iata(cursor, code):
+    if len(code) != 3:
+        return None
+    
+    table_name = "airlines"
+
+    query = f"""
+    SELECT IATA
+    FROM {table_name}
+    WHERE ICAO = %s
+    """
+
+    cursor.execute(query, (code))
+    iata_code = cursor.fetchone()
+
+    if iata_code is not None:
+        iata_code = iata_code[0]
+
+    return iata_code
+
+@db_connection
+def airline_name_to_icao(cursor, airline_name):
+    table_name = "airlines"
+
+    query = f"""
+    SELECT ICAO
+    FROM {table_name}
+    WHERE Name = %s
+    """
+
+    cursor.execute(query, (airline_name,))
+    icao_code = cursor.fetchone()
+
+    if icao_code is not None:
+        icao_code = icao_code[0]
+
+    return icao_code
+
+
 
 if __name__ == "__main__":
     origin = "JFK"
-    destination = "SFO"
+    destination = "KSFO"
     airline = "United"
     departureDate = "2024-11-03"
     userID = "Alex"
@@ -290,7 +562,7 @@ if __name__ == "__main__":
     #print(insert_flight(userID, delayMinutes, airline, origin, destination, departureDate))
     #print(delete_flight("Fake", "3000008"))
     #print(validate_user(userID, password))
-    print(create_user(userID, password))
+    print(compare_flights('ORD', 'SFO', '2024-12-15'))
 
 
 
