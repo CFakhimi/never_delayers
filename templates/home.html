@@ -10,7 +10,7 @@
 <body>
     <div class="header">
         <div class="header-inner">
-            <h1>Will I Be Delayed? &nbsp; Will I Be Delayed? &nbsp; Will I Be Delayed?</h1>
+            <h1>Will I Be Delayed? &nbsp; Will I Be Delayed? &nbsp; Will I Be Delayed? &nbsp; Will I Be Delayed? &nbsp; Will I Be Delayed? &nbsp; Will I Be Delayed? &nbsp; Will I Be Delayed? &nbsp; Will I Be Delayed? &nbsp; Will I Be Delayed? &nbsp; Will I Be Delayed?</h1>
         </div>
     </div>
 
@@ -55,12 +55,8 @@
 
             <datalist id="airlines">
                 {% for airline in airlines %}
-                    <option value={{airline}}>
+                    <option value='{{airline}}'>
                 {% endfor %}
-                <!-- <option value="American">
-                <option value="Delta">
-                <option value="United">
-                <option value="Southwest"> -->
                 <option value="No Index Airline">
             </datalist>
 
@@ -71,13 +67,6 @@
                 <h3>Enter Your Flight Info to Get Our Prediction!</h3>
                 
                 <input list="airlines" id="airline" name="airline" required placeholder="Airline (e.g. United)">
-                <!-- <select id="airline" name="airline" required>
-                    {% for airline in airlines %}
-                        <option value={{airline}}>
-                    {% endfor %}
-                    <option value="No Index Airline">
-                </select> -->
-
     
                 <input type="text" id="origin" maxlength="3" name="origin" required placeholder="Origin Airport (e.g. SFO) ">
                 <input type="text" id="destination" maxlength="3" name="destination" required placeholder="Destination Airport (e.g. LAX)">
@@ -95,13 +84,10 @@
                     <p>Please log in to upload your flights.</p>
                 {% else %}
                     <h3>Just Landed? Upload Your Flight</h3>
-                    <label>Enter Airline:</label>
                     <input list="airlines" id="airline" name="airline" required placeholder="Airline (e.g. United)">
                     
-                    <label>Origin Airport (3-letter code):</label>
                     <input type="text" id="origin" maxlength="3" name="origin" required placeholder="Origin Airport (e.g. SFO) ">
 
-                    <label>Destination Airport (3-letter code):</label>
                     <input type="text" id="destination" maxlength="3" name="destination" required placeholder="Destination Airport (e.g. LAX)">
 
                     <label>Departure Date:</label>
@@ -137,7 +123,7 @@
                                         </select>
                                         <label for="new_value">New Value:</label>
                                         <div id="editInputContainer" style="display: inline">
-                                            <input type='text' maxlength='255' name='new_value' placeholder='Enter new airline' required>
+                                            <input list="airlines" id="airline" name="new_value" required placeholder="Airline (e.g. United)">
                                         </div>
                                         <button type="submit">Edit</button>
                                     </form>
