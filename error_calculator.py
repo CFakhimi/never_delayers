@@ -30,7 +30,7 @@ def get_errors():
     proportions = []
     for date in sorted(results.keys()):
         proportion = results[date]['correct']/results[date]['total'] * 100
-        print(f'{date}: {proportion:.2f}%')
+        #print(f'{date}: {proportion:.2f}%')
         dates.append(date)
         proportions.append(proportion)
 

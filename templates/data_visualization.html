@@ -49,7 +49,7 @@
             </div>
             <div class="chart" id="chart2">
                 <h2 class="chart-title">Our Predicted Accuracy by Date</h2>
-                <svg id="svg2"></svg>
+                <svg id="svg2" data-dates='{{ dates | tojson }}' data-percentages='{{ percentages | tojson }}'></svg>
             </div>
             <div class="chart" id="chart3">
                 <h2 class="chart-title">Top Delayed Routes</h2>
@@ -117,15 +117,14 @@
     createChart("#svg1", sortedData, (d) => `${d.label}: ${d.value.toFixed(2)} mins`);
 
     // Updated Data for Chart 2: Predicted Accuracy by Date (Percentage)
-    const predictedAccuracyData = [
-        { label: "2024-12-01", value: 77.77 },
-        { label: "2024-12-02", value: 91.42 },
-        { label: "2024-12-03", value: 92.64 },
-        { label: "2024-12-04", value: 80.00 },
-        { label: "2024-12-05", value: 83.33 },
-        { label: "2024-12-06", value: 79.68 },
-        { label: "2024-12-07", value: 72.58}
-    ];
+    const svg2 = d3.select("#svg2");
+    const dates = JSON.parse(svg2.attr("data-dates"));
+    const percentages = JSON.parse(svg2.attr("data-percentages"));
+
+    const predictedAccuracyData = dates.map((date, i) => ({
+        label: date,
+        value: percentages[i]
+    }));
 
     createChart("#svg2", predictedAccuracyData, (d) => `${d.value.toFixed(2)}%`);
 

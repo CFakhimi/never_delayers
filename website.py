@@ -1,6 +1,7 @@
 from flask import Flask, render_template, request, session, jsonify
 from flask import redirect, url_for # For better redirects
 from flask import flash # Quick user messages
+from error_calculator import get_errors
 from backend.official_query import all_airline_average_delays, average_delay, insert_flight, \
                                     get_user_flights, delete_flight, edit_flight, \
                                     validate_user, create_user, top_route_delays, \
@@ -145,7 +146,7 @@ def data_page():
     #print(json.dumps(averageAirlineDelays))
     #print(airlines)
     #print(averageAirlineDelays)
-    return render_template('data_visualization.html', userID=userID, airlines=airlines, averageAirlineDelays=averageAirlineDelays, top_routes=top_routes)
+    return render_template('data_visualization.html', userID=userID, airlines=airlines, averageAirlineDelays=averageAirlineDelays, top_routes=top_routes, dates=dates, percentages=percentages)
 
 def format_delay_info(data):
     if data is None:
@@ -180,4 +181,5 @@ if __name__ == '__main__':
     top_routes = top_route_delays()
     average_delay_by_airline = all_airline_average_delays()
     airline_names = get_airlines()
-    app.run(host='db8.cse.nd.edu', debug=True, port="5013")
+    dates, percentages = get_errors()
+    app.run(host='db8.cse.nd.edu', debug=True, port="5014")
