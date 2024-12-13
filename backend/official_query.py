@@ -161,6 +161,7 @@ def average_delay(cursor, origin, destination, airline, flight_date=None):
             row_num > total_rows * 0.1
             AND row_num <= total_rows * 0.9
         """
+        cursor.execute(your_delay_query, (origin, destination, airline, month))
     else:
         your_delay_query = f"""
         WITH ranked_data AS (
@@ -179,7 +180,7 @@ def average_delay(cursor, origin, destination, airline, flight_date=None):
             row_num > total_rows * 0.1
             AND row_num <= total_rows * 0.9
         """
-    cursor.execute(your_delay_query, (origin, destination, airline))
+        cursor.execute(your_delay_query, (origin, destination, airline))
     user_avg_delay = cursor.fetchone()[0]
     
     if user_avg_delay is None:
@@ -215,6 +216,7 @@ def average_delay_numeric(cursor, origin, destination, airline, flight_date=None
             row_num > total_rows * 0.1
             AND row_num <= total_rows * 0.9
         """
+        cursor.execute(your_delay_query, (origin, destination, airline, month))
     else:
         your_delay_query = f"""
         WITH ranked_data AS (
@@ -233,10 +235,75 @@ def average_delay_numeric(cursor, origin, destination, airline, flight_date=None
             row_num > total_rows * 0.1
             AND row_num <= total_rows * 0.9
         """
-    cursor.execute(your_delay_query, (origin, destination, airline, month))
+        cursor.execute(your_delay_query, (origin, destination, airline))
+
     user_avg_delay = cursor.fetchone()[0]
     
     return user_avg_delay
+
+@db_connection
+def compare_flights(cursor, origin, destination, flight_date):
+
+    table_name = "flight_info"
+    
+    if flight_date:
+        date = datetime.strptime(flight_date, "%Y-%m-%d")
+        month = date.month
+        your_delay_query = f"""
+        WITH ranked_data AS (
+        SELECT 
+            DelayMinutes,
+            Airline,
+            ROW_NUMBER() OVER (PARTITION BY Airline ORDER BY DelayMinutes) AS row_num,
+            COUNT(*) OVER (PARTITION BY Airline) AS total_rows
+        FROM (SELECT DelayMinutes, Airline
+            FROM {table_name}
+            WHERE Origin = %s AND Destination = %s AND month(DepartureDate) = %s) as X)
+        SELECT 
+            Airline, avg(DelayMinutes)
+        FROM 
+            ranked_data
+        WHERE 
+            row_num > total_rows * 0.1
+            AND row_num <= total_rows * 0.9
+        GROUP BY
+            Airline
+        ORDER BY 
+            avg(DelayMinutes)
+        """
+        cursor.execute(your_delay_query, (origin, destination, month))
+    else:
+        your_delay_query = f"""
+        WITH ranked_data AS (
+        SELECT 
+            DelayMinutes,
+            Airline,
+            ROW_NUMBER() OVER (PARTITION BY Airline ORDER BY DelayMinutes) AS row_num,
+            COUNT(*) OVER (PARTITION BY Airline) AS total_rows
+        FROM (SELECT DelayMinutes, Airline
+            FROM {table_name}
+            WHERE Origin = %s AND Destination = %s) as X)
+        SELECT 
+            Airline, avg(DelayMinutes)
+        FROM 
+            ranked_data
+        WHERE 
+            row_num > total_rows * 0.1
+            AND row_num <= total_rows * 0.9
+        GROUP BY
+            Airline
+        ORDER BY
+            avg(DelayMinutes)
+        """
+        cursor.execute(your_delay_query, (origin, destination))
+
+    results = cursor.fetchall()
+    
+    if results is None:
+        #print("No data available for the specified query.")
+        return "No delay data available for that flight path."
+
+    return results
 
 @db_connection
 def delay_compare(cursor, origin, destination, airline):
@@ -437,7 +504,7 @@ if __name__ == "__main__":
     #print(insert_flight(userID, delayMinutes, airline, origin, destination, departureDate))
     #print(delete_flight("Fake", "3000008"))
     #print(validate_user(userID, password))
-    print(average_delay_numeric('PIT', 'ATL', 'Delta', '2024-10-15'))
+    print(compare_flights('ORD', 'SFO', '2024-12-15'))
 
 
 

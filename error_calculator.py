@@ -1,5 +1,5 @@
 import csv
-from backend.official_query import average_delay_numeric
+from backend.official_query import average_delay_numeric, insert_flight
 from tqdm import tqdm
 
 def get_errors():
@@ -56,6 +56,20 @@ def fix():
 
             writer.writerow(row)
 
+def insert():
+    path = 'predictions.txt'
+    user = 'admin'
+
+    with open(path, 'r') as file:
+        reader = csv.DictReader(file)
+
+        for row in tqdm(reader):
+            if row['origin'] is None:
+                date = row['airline']
+                continue
+            
+            insert_flight(user, row['dep_delay'], row['airline'], row['origin'], row['destination'], date)
+
 if __name__ == "__main__":
-    main()
+    print(get_errors())
             

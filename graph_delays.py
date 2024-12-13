@@ -1,5 +1,5 @@
 import matplotlib.pyplot as plt
-from backend.official_query import get_top_flights, average_delay_numeric
+from backend.official_query import get_top_flights, average_delay_numeric, insert_flight
 from grab_and_scrape import analyze_flights
 from datetime import datetime
 import time
@@ -16,6 +16,7 @@ def main():
     delta = 2
     scatter_data = []
     notFound = 0
+    user = 'admin'
 
     with open('predictions.txt', 'a') as file:
         file.write(f'{today_date}\n')
@@ -39,6 +40,7 @@ def main():
         print(flight_number, avg_delay, dep_delay)
         with open('predictions.txt', 'a') as file:
             file.write(f'{airline},{origin},{destination},{departure},{arrival},{flight_number},{avg_delay},{dep_delay},{arr_delay}\n')
+        insert_flight(user, dep_delay, airline, origin, destination, today_date)
 
     print(f'{notFound} of {limit} flights not found today')    
 '''
