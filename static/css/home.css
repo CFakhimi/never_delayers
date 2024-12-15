@@ -25,6 +25,45 @@ body {
 button:hover {
     opacity: 80%
 }
+.flashed-messages {
+    width: 60%;
+    margin: 10px auto;
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    position: relative;
+    z-index: 100;
+}
+
+/* Flash Message Box */
+.flash-message {
+    background: rgba(255, 255, 255, 0.9);
+    border-left: 5px solid #1565c0;
+    color: black;
+    font-size: 1em;
+    font-weight: bold;
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.2); 
+    border-radius: 4px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2); 
+    text-align: left;
+    line-height: 1.2;
+    height: 45px;
+    display: flex;
+    align-items: center;
+    padding-left: 15px; /* Shift text from the left */
+    margin: 0;
+}
+
+/* Header Fix */
+.header {
+    position: relative;
+    z-index: 1;
+    text-align: center;
+    font-size: 3em;
+    margin: 50px 0 0 0;
+}
+
+
 
 /*** Dropdown Menu Stuff (For Form Selection) ***/
 .formDropdown {

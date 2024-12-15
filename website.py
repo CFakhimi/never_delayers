@@ -54,23 +54,17 @@ def home(): # This is the home page!!!
             
             # Call the upload function
             upload_status = insert_flight(userID, delayMinutes, airline, origin, destination, departureDate)
-            if upload_status == "Success":
-                result = "Added flight successfully!"
-            elif upload_status == "User DNE":
-                result = "Please log in to add a flight."
-            flash(result)
+            result = format_upload_status(upload_status)
+            #flash(result)
             #flash(f'Upload Status: {upload_status}')
-            return redirect(url_for('home'))
+            #return redirect(url_for('home'))
 
         elif form_type == 'delete_flight':
             flight_id = request.form.get('flight_id')
             delete_status = delete_flight(userID, flight_id)
-            if delete_status == "Success":
-                result = f"Flight ID {flight_id} deleted successfully."
-            else:
-                result = f"Failed to delete Flight ID {flight_id}."
-            flash(result)
-            return redirect(url_for('home'))
+            result = format_delete_status(delete_status, flight_id)
+            #flash(result)
+            #return redirect(url_for('home'))
 
         elif form_type == 'edit_flight':
             flight_id = request.form.get('flight_id')
@@ -78,12 +72,8 @@ def home(): # This is the home page!!!
             new_value = request.form.get('new_value')
 
             edit_status = edit_flight(flight_id, attribute, new_value)
-            if edit_status == "Updated table":
-                result = f"Flight ID {flight_id} edited successfully."
-            else:
-                result = f"Failed to edit Flight ID {flight_id}."
-            flash(result)
-            return redirect(url_for('home'))
+            result = format_edit_status(edit_status, flight_id)
+            #return redirect(url_for('home'))
 
     return render_template('home.html', userID=userID, result=result, user_flights=user_flights, airlines=airline_names)
 
@@ -175,6 +165,100 @@ def format_delay_info(data):
         <p class="predicted-delay"><strong>Predicted Delay:</strong> <span style="{text_style}">{avg_delay:.2f} min</span></p>
     """
 
+def format_upload_status(upload_status):
+    base_style = """
+        font-size:2em; 
+        font-weight:bold; 
+        color:white; 
+        text-shadow: 1px 1px 2px black;
+        text-align:center;
+        margin: 0;
+        padding: 0;
+        line-height: 1.2;
+    """
+
+    if upload_status == "Success":
+        return f"""
+            <div style="text-align:center;">
+                <p class="result-text" style="{base_style} color:green;">
+                    Flight added successfully!
+                </p>
+                <span style="font-size:3em;">✅</span>
+            </div>
+        """
+    else:
+        return f"""
+            <div style="text-align:center;">
+                <p class="result-text" style="{base_style} color:red;">
+                    Please log in to add a flight.
+                </p>
+                <span style="font-size:3em;">🚫</span>
+            </div>
+        """
+    
+def format_edit_status(edit_status, flight_id):
+    base_style = """
+        font-size:2em; 
+        font-weight:bold; 
+        color:white; 
+        text-shadow: 1px 1px 2px black;
+        text-align:center;
+        padding: 0;
+        margin: 0;
+        line-height: 1.2;
+    """
+
+    if edit_status == "Updated table":
+        return f"""
+            <div style="text-align:center;">
+                <p class="result-text" style="{base_style} color:lime;">
+                    Flight ID {flight_id} edited successfully!
+                </p>
+                <span style="font-size:3em;">✈️✅</span>
+            </div>
+        """
+    else:
+        return f"""
+            <div style="text-align:center;">
+                <p class="result-text" style="{base_style} color:red;">
+                    Failed to edit Flight ID {flight_id}.
+                </p>
+                <span style="font-size:3em;">⚠️</span>
+            </div>
+        """
+def format_delete_status(delete_status, flight_id):
+    base_style = """
+        font-size:2em; 
+        font-weight:bold; 
+        color:white; 
+        text-shadow: 1px 1px 2px black;
+        text-align:center;
+        padding: 0;
+        margin: 0;
+        line-height: 1.2;
+    """
+
+    if delete_status == "Success":
+        return f"""
+            <div style="text-align:center;">
+                <p class="result-text" style="{base_style} color:lime;">
+                    Flight ID {flight_id} deleted successfully!
+                </p>
+                <span style="font-size:3em;">🗑️✅</span>
+            </div>
+        """
+    else:
+        return f"""
+            <div style="text-align:center;">
+                <p class="result-text" style="{base_style} color:red;">
+                    Failed to delete Flight ID {flight_id}.
+                </p>
+                <span style="font-size:3em;">⚠️</span>
+            </div>
+        """
+    
+
+
 
 
 if __name__ == '__main__':
@@ -182,4 +266,4 @@ if __name__ == '__main__':
     average_delay_by_airline = all_airline_average_delays()
     airline_names = get_airlines()
     dates, percentages = get_errors()
-    app.run(host='db8.cse.nd.edu', debug=True, port="5014")
+    app.run(host='db8.cse.nd.edu', debug=True, port="5015")

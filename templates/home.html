@@ -30,13 +30,13 @@
     <div class="flashedMessageSection">
         {% with messages = get_flashed_messages() %}
             {% if messages %}
-                <ul class="flashes">
+                <div class="flashed-messages">
                     {% for message in messages %}
-                        <li>{{ message }}</li>
+                        <div class="flash-message">{{ message }}</div>
                     {% endfor %}
-                </ul>
+                </div>
             {% endif %}
-        {% endwith %}
+        {% endwith %} 
     </div>
 
     <div class="content">
@@ -81,7 +81,9 @@
             <form class="dataInput" id="upload" action="{{ url_for('home') }}" method="POST">
                 <input type="hidden" name="form_type" value="upload_flight">
                 {% if userID == 'Not logged in' %}
-                    <p>Please log in to upload your flights.</p>
+                    <p style="text-align: center; color: black; font-size: 1.8em; font-weight: bold; 
+                    margin-left: 20px; ">Please log in to upload your flights.</p>
+            
                 {% else %}
                     <h3>Just Landed? Upload Your Flight</h3>
                     <input list="airlines" id="airline" name="airline" required placeholder="Airline (e.g. United)">
@@ -131,7 +133,7 @@
                             {% endfor %}
                         </ul>
                     {% else %}
-                        <p>No flights found.</p>
+                        <p>No flights found, you may need to refresh.</p>
                     {% endif %}
                 {% endif %}
             </div>
@@ -158,7 +160,7 @@
                             {% endfor %}
                         </ul>
                     {% else %}
-                        <p>No flights found.</p>
+                        <p>No flights found, you may need to refresh..</p>
                     {% endif %}
                 {% endif %}
             </div>
