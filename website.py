@@ -22,6 +22,8 @@ def query_database(inputs):
 def index():
     return render_template('index.html')
 
+# @app.route('/home', methods=['GET'])
+
 @app.route('/home', methods=['POST', 'GET'])
 def home(): # This is the home page!!!
     userID = session.get('username', 'Not logged in')
@@ -65,6 +67,7 @@ def home(): # This is the home page!!!
             result = format_delete_status(delete_status, flight_id)
             #flash(result)
             #return redirect(url_for('home'))
+            return render_template('home.html', userID=userID, result=result, user_flights=user_flights, airlines=airline_names)
 
         elif form_type == 'edit_flight':
             flight_id = request.form.get('flight_id')
@@ -73,7 +76,7 @@ def home(): # This is the home page!!!
 
             edit_status = edit_flight(flight_id, attribute, new_value)
             result = format_edit_status(edit_status, flight_id)
-            #return redirect(url_for('home'))
+            return redirect(url_for('home'))
 
     return render_template('home.html', userID=userID, result=result, user_flights=user_flights, airlines=airline_names)
 
@@ -266,4 +269,4 @@ if __name__ == '__main__':
     average_delay_by_airline = all_airline_average_delays()
     airline_names = get_airlines()
     dates, percentages = get_errors()
-    app.run(host='db8.cse.nd.edu', debug=True, port="5015")
+    app.run(host='db8.cse.nd.edu', debug=True, port="5013")

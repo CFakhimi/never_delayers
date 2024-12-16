@@ -116,7 +116,7 @@
                                         <input type="hidden" name="form_type" value="edit_flight">
                                         <input type="hidden" name="flight_id" value="{{ flight.id }}">
                                         <label>Attribute to Edit:</label>
-                                        <select name="attribute" id="attributeSelection" onchange="getInputType()">
+                                        <select name="attribute" id="attributeSelection{{flight.id}}" onchange="getInputType('{{flight.id}}')">
                                             <option value="Airline">Airline</option>
                                             <option value="Origin">Origin</option>
                                             <option value="Destination">Destination</option>
@@ -124,7 +124,7 @@
                                             <option value="DelayMinutes">Delay Minutes</option>
                                         </select>
                                         <label for="new_value">New Value:</label>
-                                        <div id="editInputContainer" style="display: inline">
+                                        <div id="editInputContainer{{flight.id}}" style="display: inline">
                                             <input list="airlines" id="airline" name="new_value" required placeholder="Airline (e.g. United)">
                                         </div>
                                         <button type="submit">Edit</button>

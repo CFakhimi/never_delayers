@@ -2,6 +2,13 @@
 //     showPredictionForm(); // Automatically display the first form (the prediction form) on page load
 // });
 
+// Prevent forms from submitting on reload
+// const all_forms = document.getElementsByClassName('dataInput');
+// all_forms.forEach(form => form.addEventListener('submit', function(event) {
+//                         event.preventDefault();
+//                         //this.reset();
+//                     }));
+
 function showForm(formType) {
     // Hide all forms
     const forms = document.querySelectorAll('.dataInput');
@@ -42,10 +49,10 @@ function hideDropdown() {
     document.getElementById('formSelect').style.display = "none";
 }
 
-function getInputType() {
-    const inputContainer = document.getElementById("editInputContainer");
+function getInputType(flightID) {
+    const inputContainer = document.getElementById(`editInputContainer${flightID}`);
     inputContainer.innerHTML = "";
-    const inputType = document.getElementById("attributeSelection").value;
+    const inputType = document.getElementById(`attributeSelection${flightID}`).value;
     switch (inputType) {
         case "Airline":
             inputContainer.innerHTML = "<input list='airlines' name='new_value' required placeholder='Airline (e.g. United)'>";
