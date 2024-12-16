@@ -3,7 +3,7 @@ from backend.official_query import average_delay_numeric, insert_flight
 from tqdm import tqdm
 
 def get_errors():
-    path = 'predictions.txt'
+    path = 'live_data/predictions.txt' # had to fix this to move things around!
     tolerance = 10
     delay = 'dep_delay'
 

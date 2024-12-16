@@ -1,7 +1,7 @@
 from flask import Flask, render_template, request, session, jsonify
 from flask import redirect, url_for # For better redirects
 from flask import flash # Quick user messages
-from error_calculator import get_errors
+from live_data.error_calculator import get_errors
 from backend.official_query import all_airline_average_delays, average_delay, insert_flight, \
                                     get_user_flights, delete_flight, edit_flight, \
                                     validate_user, create_user, top_route_delays, \
@@ -130,17 +130,9 @@ def register():
 @app.route('/data_visualization', methods=['GET'])
 def data_page():
     userID = session.get('username', 'Not logged in')
-    # The delays are in the format 'Decimal(__delay__)'
-    # Extract out just the delay as a float
     delay_data = {key: float(value) for key, value in average_delay_by_airline.items()}
-    #print(type(delay_data))
-    #print(delay_data)
     airlines = list(delay_data.keys())
     averageAirlineDelays = list(delay_data.values())
-    #print(type(json.dumps(airlines)))
-    #print(json.dumps(averageAirlineDelays))
-    #print(airlines)
-    #print(averageAirlineDelays)
     return render_template('data_visualization.html', userID=userID, airlines=airlines, averageAirlineDelays=averageAirlineDelays, top_routes=top_routes, dates=dates, percentages=percentages)
 
 def format_delay_info(data):
@@ -153,7 +145,7 @@ def format_delay_info(data):
     flight_date_info = f"<p style='font-size:0.8em; font-family:Arial, sans-serif;'><strong>Date:</strong> {data['flight_date']}</p>" if data['flight_date'] else ""
 
     avg_delay = data['average_delay']
-    if avg_delay > 15:
+    if avg_delay > 10:
         color = "red"
     elif avg_delay > 5:
         color = "yellow"
@@ -172,15 +164,8 @@ def format_delay_info(data):
 
 def format_upload_status(upload_status):
     base_style = """
-        font-size:2em; 
-        font-weight:bold; 
-        color:white; 
-        text-shadow: 1px 1px 2px black;
-        text-align:center;
-        margin: 0;
-        padding: 0;
-        line-height: 1.2;
-    """
+        font-size:2em; font-weight:bold; color:white; text-shadow: 1px 1px 2px black;
+        text-align:center;margin: 0; padding: 0; line-height: 1.2;"""
 
     if upload_status == "Success":
         return f"""
@@ -202,16 +187,8 @@ def format_upload_status(upload_status):
         """
     
 def format_edit_status(edit_status, flight_id):
-    base_style = """
-        font-size:2em; 
-        font-weight:bold; 
-        color:white; 
-        text-shadow: 1px 1px 2px black;
-        text-align:center;
-        padding: 0;
-        margin: 0;
-        line-height: 1.2;
-    """
+    base_style = """font-size:2em; font-weight:bold; color:white; text-shadow: 1px 1px 2px black;
+        text-align:center; padding: 0; margin: 0; line-height: 1.2;"""
 
     if edit_status == "Updated table":
         return f"""
@@ -232,16 +209,8 @@ def format_edit_status(edit_status, flight_id):
             </div>
         """
 def format_delete_status(delete_status, flight_id):
-    base_style = """
-        font-size:2em; 
-        font-weight:bold; 
-        color:white; 
-        text-shadow: 1px 1px 2px black;
-        text-align:center;
-        padding: 0;
-        margin: 0;
-        line-height: 1.2;
-    """
+    base_style = """font-size:2em; font-weight:bold; color:white; text-shadow: 1px 1px 2px black;
+        text-align:center; padding: 0; margin: 0; line-height: 1.2;"""
 
     if delete_status == "Success":
         return f"""
@@ -262,9 +231,6 @@ def format_delete_status(delete_status, flight_id):
             </div>
         """
     
-
-
-
 
 if __name__ == '__main__':
     top_routes = top_route_delays()
