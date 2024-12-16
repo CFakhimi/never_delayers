@@ -22,63 +22,65 @@ def query_database(inputs):
 def index():
     return render_template('index.html')
 
-# @app.route('/home', methods=['GET'])
-
-@app.route('/home', methods=['POST', 'GET'])
+@app.route('/home', methods=['GET'])
 def home(): # This is the home page!!!
     userID = session.get('username', 'Not logged in')
     user_flights = get_user_flights(userID=userID)
-    #print(user_flights)
-    result = None
-    # Add post request here
-    # This will query the database and return it
-    if request.method == 'POST':
-        form_type = request.form.get('form_type')
-        # Handle form submissions based on the form type
-        if form_type == 'predict_delay':
-            origin = request.form.get('origin')
-            destination = request.form.get('destination')
-            airline = request.form.get('airline')
-            flight_date = None
-
-            result = average_delay(origin, destination, airline, flight_date)
-            print(f"Average delay is {result}")
-            result = format_delay_info(result)
-            #flash(f'Prediction: The average delay for this flight is {result}.')
-
-        elif form_type == 'upload_flight':
-            #userID = request.form.get('userID')
-            delayMinutes = request.form.get('delayMinutes')
-            origin = request.form.get('origin')
-            destination = request.form.get('destination')
-            departureDate = request.form.get('departureDate')
-            airline = request.form.get('airline')
-            
-            # Call the upload function
-            upload_status = insert_flight(userID, delayMinutes, airline, origin, destination, departureDate)
-            result = format_upload_status(upload_status)
-            #flash(result)
-            #flash(f'Upload Status: {upload_status}')
-            #return redirect(url_for('home'))
-
-        elif form_type == 'delete_flight':
-            flight_id = request.form.get('flight_id')
-            delete_status = delete_flight(userID, flight_id)
-            result = format_delete_status(delete_status, flight_id)
-            #flash(result)
-            #return redirect(url_for('home'))
-            return render_template('home.html', userID=userID, result=result, user_flights=user_flights, airlines=airline_names)
-
-        elif form_type == 'edit_flight':
-            flight_id = request.form.get('flight_id')
-            attribute = request.form.get('attribute')
-            new_value = request.form.get('new_value')
-
-            edit_status = edit_flight(flight_id, attribute, new_value)
-            result = format_edit_status(edit_status, flight_id)
-            return redirect(url_for('home'))
-
+    result = session.get('result', None)
     return render_template('home.html', userID=userID, result=result, user_flights=user_flights, airlines=airline_names)
+
+
+@app.route('/home', methods=['POST'])
+def home_form_submission():
+    result = None
+    form_type = request.form.get('form_type')
+    userID = session.get('username', 'Not logged in')
+    # Handle form submissions based on the form type
+    if form_type == 'predict_delay':
+        origin = request.form.get('origin')
+        destination = request.form.get('destination')
+        airline = request.form.get('airline')
+        flight_date = None
+
+        result = average_delay(origin, destination, airline, flight_date)
+        print(f"Average delay is {result}")
+        result = format_delay_info(result)
+        #flash(f'Prediction: The average delay for this flight is {result}.')
+
+    elif form_type == 'upload_flight':
+        #userID = request.form.get('userID')
+        delayMinutes = request.form.get('delayMinutes')
+        origin = request.form.get('origin')
+        destination = request.form.get('destination')
+        departureDate = request.form.get('departureDate')
+        airline = request.form.get('airline')
+        
+        # Call the upload function
+        upload_status = insert_flight(userID, delayMinutes, airline, origin, destination, departureDate)
+        result = format_upload_status(upload_status)
+        #flash(result)
+        #flash(f'Upload Status: {upload_status}')
+        #return redirect(url_for('home'))
+
+    elif form_type == 'delete_flight':
+        flight_id = request.form.get('flight_id')
+        delete_status = delete_flight(userID, flight_id)
+        result = format_delete_status(delete_status, flight_id)
+        #flash(result)
+        #return redirect(url_for('home'))
+        
+    elif form_type == 'edit_flight':
+        flight_id = request.form.get('flight_id')
+        attribute = request.form.get('attribute')
+        new_value = request.form.get('new_value')
+
+        edit_status = edit_flight(flight_id, attribute, new_value)
+        result = format_edit_status(edit_status, flight_id)
+        #return redirect(url_for('home'))
+
+    if result:
+        session['result'] = result
+    return redirect(url_for('home'))
 
 @app.route('/login', methods=['GET'])
 def login():
