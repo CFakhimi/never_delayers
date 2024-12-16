@@ -1,3 +1,7 @@
+import sys
+import os
+sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+
 import matplotlib.pyplot as plt
 from backend.official_query import get_top_flights, average_delay_numeric, insert_flight
 from grab_and_scrape import analyze_flights
@@ -11,18 +15,19 @@ def main():
     top_flights = get_top_flights(limit=limit)
 
     # Hard coded values
-    now = datetime.now()
-    today_date = now.strftime('%Y-%m-%d')
+    #now = datetime.now()
+    #today_date = now.strftime('%Y-%m-%d')
+    today_date = '2024-12-15'
     delta = 2
     scatter_data = []
     notFound = 0
     user = 'admin'
 
-    with open('predictions.txt', 'a') as file:
+    with open('live_data/predictions.txt', 'a') as file:
         file.write(f'{today_date}\n')
 
     for flight in top_flights:
-        time.sleep(20)
+        time.sleep(30)
         #print(flight)
         airline, origin, destination, departure, arrival = flight
         print(airline, origin, destination, departure, arrival)
@@ -30,15 +35,14 @@ def main():
             dep=origin, arr=destination, airline=airline,
             start_hour=departure, finish_hour=arrival, date=today_date, delta=delta
         )
-        avg_delay = average_delay_numeric(origin, destination, airline, today_date) # Need to add refining for month
-        # Need to actually make avg delay a number and not a word?
+        avg_delay = average_delay_numeric(origin, destination, airline, today_date)
         if today_delays == None:
             print("Did not fly today")
             notFound += 1
             continue
         flight_number, dep_delay, arr_delay = today_delays
         print(flight_number, avg_delay, dep_delay)
-        with open('predictions.txt', 'a') as file:
+        with open('live_data/predictions.txt', 'a') as file:
             file.write(f'{airline},{origin},{destination},{departure},{arrival},{flight_number},{avg_delay},{dep_delay},{arr_delay}\n')
         insert_flight(user, dep_delay, airline, origin, destination, today_date)
 

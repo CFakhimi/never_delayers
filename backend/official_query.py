@@ -562,7 +562,7 @@ if __name__ == "__main__":
     #print(insert_flight(userID, delayMinutes, airline, origin, destination, departureDate))
     #print(delete_flight("Fake", "3000008"))
     #print(validate_user(userID, password))
-    print(compare_flights('ORD', 'SFO', '2024-12-15'))
+    print(average_delay('ORD', 'SFO', 'American', '2024-12-15'))
 
 
 
