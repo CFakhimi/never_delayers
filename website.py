@@ -27,7 +27,36 @@ def home(): # This is the home page!!!
     userID = session.get('username', 'Not logged in')
     user_flights = get_user_flights(userID=userID)
     result = session.get('result', None)
-    return render_template('home.html', userID=userID, result=result, user_flights=user_flights, airlines=airline_names)
+    
+    # Handle pagifaction of forms
+    current_edit_page = None
+    current_delete_page = None
+    editable_flights = None
+    deletable_flights = None
+    items_per_page = None
+    total_pages = None
+    if user_flights:
+        items_per_page = 5
+        total_pages = (len(user_flights) + items_per_page - 1) // items_per_page
+        session['total_pages'] = total_pages
+        current_edit_page = session.get('curr_edit_page', 1)
+        current_delete_page = session.get('curr_delete_page', 1)
+        editable_flights = user_flights[(current_edit_page - 1) * items_per_page : (current_edit_page) * items_per_page]
+        deletable_flights = user_flights[(current_delete_page - 1) * items_per_page : (current_delete_page) * items_per_page]
+
+    # print("User edit flights: ", len(editable_flights))
+    # print("User del flights: ", len(deletable_flights))
+    if user_flights:
+        print("Num flights: ", len(user_flights))
+    print(current_edit_page)
+    print(current_delete_page)
+    if editable_flights:
+        print(len(editable_flights))
+
+    return render_template('home.html', userID=userID, result=result, 
+                           editable_flights=editable_flights, curr_edit_page=current_edit_page,
+                           deletable_flights=deletable_flights, curr_delete_page=current_delete_page,
+                           total_pages=total_pages, airlines=airline_names)
 
 
 @app.route('/home', methods=['POST'])
@@ -40,7 +69,7 @@ def home_form_submission():
         origin = request.form.get('origin')
         destination = request.form.get('destination')
         airline = request.form.get('airline')
-        flight_date = None
+        flight_date = request.form.get('flight_date')
 
         result = average_delay(origin, destination, airline, flight_date)
         print(f"Average delay is {result}")
@@ -82,6 +111,52 @@ def home_form_submission():
         session['result'] = result
     return redirect(url_for('home'))
 
+@app.route('/next_edit_page', methods=['GET'])
+def next_edit_page():
+    total_pages = session.get('total_pages', default=1)
+    session['curr_edit_page'] = session.get('curr_edit_page', 1) + 1
+    if session.get('curr_edit_page') > total_pages:
+        session['curr_edit_page'] = total_pages
+    return redirect(url_for('home'))
+
+@app.route('/previous_edit_page', methods=['GET'])
+def previous_edit_page(): 
+    session['curr_edit_page'] = session.get('curr_edit_page', 1) - 1
+    if session.get('curr_edit_page') <= 0:
+        session['curr_edit_page'] = 1
+    return redirect(url_for('home'))
+
+@app.route('/select_edit_page', methods=['POST'])
+def select_edit_page():
+    new_edit_page = int(request.form.get('new_page'))
+    total_pages = session.get('total_pages', default=1)
+    if (1 <= new_edit_page) and (new_edit_page <= total_pages):
+        session['curr_edit_page'] = new_edit_page
+    return redirect(url_for('home')) 
+
+@app.route('/next_delete_page', methods=['GET'])
+def next_delete_page():
+    total_pages = session.get('total_pages', 1)
+    session['curr_delete_page'] = session.get('curr_delete_page', 1) + 1
+    if session.get('curr_delete_page') > total_pages:
+        session['curr_delete_page'] = total_pages
+    return redirect(url_for('home'))
+
+@app.route('/previous_delete_page', methods=['GET'])
+def previous_delete_page(): 
+    session['curr_delete_page'] = session.get('curr_delete_page', 1) - 1
+    if session.get('curr_delete_page') <= 0:
+        session['curr_delete_page'] = 1
+    return redirect(url_for('home'))
+
+@app.route('/select_delete_page', methods=['POST'])
+def select_delete_page():
+    new_delete_page = int(request.form.get('new_page'))
+    total_pages = session.get('total_pages', default=1)
+    if (1 <= new_delete_page) and (new_delete_page <= total_pages):
+        session['curr_delete_page'] = new_delete_page
+    return redirect(url_for('home')) 
+
 @app.route('/login', methods=['GET'])
 def login():
     return render_template('login.html')
@@ -103,6 +178,10 @@ def authenticate():
 @app.route('/logout')
 def logout():
     session.pop('username', None)
+    session.pop('total_pages', None)
+    session.pop('curr_edit_page', None)
+    session.pop('curr_delete_page', None)
+    session.pop('result', None)
     flash('You have been logged out.')
     return redirect(url_for('home'))
 
@@ -142,7 +221,7 @@ def format_delay_info(data):
             <p class="emote">😢</p>
         """
 
-    flight_date_info = f"<p style='font-size:0.8em; font-family:Arial, sans-serif;'><strong>Date:</strong> {data['flight_date']}</p>" if data['flight_date'] else ""
+    flight_date_info = f"<p class='result-text'><strong>Date:</strong> {data['flight_date']}</p>" if data['flight_date'] else "<p class='result-text'><strong>Date:</strong> N/A</p>"
 
     avg_delay = data['average_delay']
     if avg_delay > 10:

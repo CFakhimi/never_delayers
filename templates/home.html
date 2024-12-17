@@ -72,7 +72,7 @@
                 <input type="text" id="destination" maxlength="3" name="destination" required placeholder="Destination Airport (e.g. LAX)">
 
                 <label for="flight_date"> Your Flight Date:</label>
-                <input type="date" id="flight_date" name="flight_date" required>
+                <input type="date" id="flight_date" name="flight_date">
 
                 <button type="submit">Predict</button>
             </form>
@@ -107,11 +107,12 @@
                 {% if userID == 'Not logged in' %}
                     <p>Please log in to view your flights.</p>
                 {% else %}
-                    {% if user_flights %}
+                    {% if editable_flights %}
+                        <p>Showing page {{ curr_edit_page }} of {{ total_pages }}.</p>
                         <ul>
-                            {% for flight in user_flights %}
+                            {% for flight in editable_flights %}
                                 <li>
-                                    Flight ID: {{ flight.id }}, Airline: {{ flight.airline }}, Origin: {{ flight.origin }}, Destination: {{ flight.destination }}, Date: {{ flight.departure_date }}
+                                    Flight ID: {{ flight.id }}, Airline: {{ flight.airline }}, Origin: {{ flight.origin }}, Destination: {{ flight.destination }}, Date: {{ flight.departure_date }}, Delay: {{ flight.delay_minutes }}
                                     <form action="{{ url_for('home') }}" method="POST" style="display: inline;">
                                         <input type="hidden" name="form_type" value="edit_flight">
                                         <input type="hidden" name="flight_id" value="{{ flight.id }}">
@@ -133,6 +134,18 @@
                                 </li>
                             {% endfor %}
                         </ul>
+                        <div class="Pagification_Controls">
+                            <a class="Pagification_Previous" href="{{ url_for('previous_edit_page')}}" style="visibility: {{ 'visible' if curr_edit_page > 1 else 'hidden' }};">
+                                Previous
+                            </a>
+                            <form class="Pagifcation_Page_Select" action="{{ url_for('select_edit_page') }}" method="POST">
+                                <input class="Pagification_Input" name="new_page" type="number" min="1" max="{{ total_pages }}" required placeholder="Enter a page number">
+                                <button type="submit">Go</button>
+                            </form>
+                            <a class="Pagification_Next" href="{{ url_for('next_edit_page')}}" style="visibility: {{ 'visible' if curr_delete_page < total_pages else 'hidden' }};">
+                                Next
+                            </a>
+                        </div>
                     {% else %}
                         <p>No flights found, you may need to refresh.</p>
                     {% endif %}
@@ -145,25 +158,38 @@
                 {% if userID == 'Not logged in' %}
                     <p>Please log in to view your flights.</p>
                 {% else %}
-                    {% if user_flights %}
+                    {% if deletable_flights %}
+                        <p>Showing page {{ curr_delete_page }} of {{ total_pages }}.</p>
                         <ul>
-                            {% for flight in user_flights %}
-                                <li>
-                                    Flight ID: {{ flight.id }}, Airline: {{ flight.airline }}, Origin: {{ flight.origin }}, Destination: {{ flight.destination }}, Date: {{ flight.departure_date }}
-                                    <form action="{{ url_for('home') }}" method="POST" style="display: inline;">
-                                        <div class="flight_entry">
+                            {% for flight in deletable_flights %}
+                                <div class="flight_entry">
+                                    <li>
+                                        Flight ID: {{ flight.id }}, Airline: {{ flight.airline }}, Origin: {{ flight.origin }}, Destination: {{ flight.destination }}, Date: {{ flight.departure_date }}
+                                        <form action="{{ url_for('home') }}" method="POST" style="display: inline-block;">
                                             <input type="hidden" name="form_type" value="delete_flight">
                                             <input type="hidden" name="flight_id" value="{{ flight.id }}">
                                             <button type="submit" class="deleteButton">
                                                 Delete
                                             </button>
-                                        </div>
-                                    </form>
-                                </li>
+                                        </form>
+                                    </li>
+                                </div>
                             {% endfor %}
                         </ul>
+                        <div class="Pagification_Controls">
+                            <a class="Pagification_Previous" href="{{ url_for('previous_delete_page')}}" style="visibility: {{ 'visible' if curr_delete_page > 1 else 'hidden' }};">
+                                Previous
+                            </a>
+                            <form class="Pagifcation_Page_Select" action="{{ url_for('select_delete_page') }}" method="POST">
+                                <input class="Pagification_Input" name="new_page" type="number" min="1" max="{{ total_pages }}" required placeholder="Enter a page number">
+                                <button type="submit">Go</button>
+                            </form>
+                            <a class="Pagification_Next" href="{{ url_for('next_delete_page')}}" style="visibility: {{ 'visible' if curr_delete_page < total_pages else 'hidden' }};">
+                                Next
+                            </a>
+                        </div>
                     {% else %}
-                        <p>No flights found, you may need to refresh..</p>
+                        <p>No flights found, you may need to refresh.</p>
                     {% endif %}
                 {% endif %}
             </div>
@@ -179,8 +205,8 @@
         </div>
     </div>
 
-    <div class="footer">
+    <!-- <div class="footer">
         <p>***Will I Be Delayed is not responsible for any missed flight compensation.</p>
-    </div>
+    </div> -->
 </body>
 </html>
