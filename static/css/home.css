@@ -15,9 +15,10 @@ body {
     display: flex;
     flex-direction: column;
     min-height: 100vh;
+    background-color: #e0f7fa;
     /* background: linear-gradient(135deg, #FF4500, #800080);
     background: linear-gradient(135deg, #FFD700, #FF1493); */
-    background: linear-gradient(135deg, #e0f7fa, #b2ebf2);
+    /* background: linear-gradient(135deg, #e0f7fa, #b2ebf2); */
     /* background: linear-gradient(135deg, #FFFACD, #FFC0CB); */
     overflow-x: scroll;
 }
@@ -72,11 +73,10 @@ button:hover {
     text-align: center;
     justify-content: center;
     margin-top: 20px;
-    margin-left: 50px;
+    align-content: center;
 }
 
 .formDropdown .formDropdownButton {
-    /* width: 200px; */
     width: 350px;
     background-color: green;
     color: white;
@@ -93,15 +93,11 @@ button:hover {
     display: none;
     justify-content: center;
     align-content: center;
-    /* position: relative; */
     position: absolute;
     background-color: aliceblue;
-    /* min-width: 160px; */
     min-width: 330px;
-    margin-left: 10px;
-    margin-right: 10px;
+    margin-left: 235px;
     box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
-    /* z-index: 1; */
     z-index: 2;
     border-bottom-left-radius: 10px;
     border-bottom-right-radius: 10px;
@@ -141,21 +137,30 @@ button:hover {
     margin-top: 10px;
     margin-bottom: 10px;
     text-align: left;
-    width: 400px;
+    width: 800px;
 }
 
 .dataInput.active {
     display: block;
 }
 
+.dataInput h3 {
+    text-decoration: underline;
+
+}
+
+.dataInput label, input, select {
+    display: inline-block;
+}
+
 .dataInput input, select {
-    display: block;
+    /* display: inline-block; */
     margin-top: 10px;
     margin-bottom: 10px;
     text-align: center;
     border: 1px solid black;
     padding: 12px 20px;
-    width: 400px;
+    width: 100%;
     border-radius: 8px;
 }
 
@@ -169,7 +174,8 @@ button:hover {
     padding: 12px 20px;
     width: 200px;
     /* margin: 0 auto; */
-    margin: 0 100px; 
+    /* margin: 0 100px;  */
+    margin: auto;
     /* margin-bottom: 10px; */
     border-radius: 8px;
 }
@@ -191,7 +197,7 @@ button:hover {
 
 .dataInput[id="edit"] input {
     display: inline-block;
-    width: 150px;
+    width: 250px;
     margin-right: 12px;
     border-radius: 8px;
 }
@@ -205,10 +211,23 @@ button:hover {
     border-radius: 8px;
 }
 
-.dataInput[id="delete"] button {
-    display: block;
+.dataInput[id="delete"] .flight_entry {
+    display: flex;
+}
+
+.dataInput[id="delete"] .flight_entry label {
+    display: inline-block;
+    width: 700px;
+    padding-right: 20px;
+    margin-right: 20px;
+}
+
+.dataInput[id="delete"] .flight_entry button {
+    display: inline-block;
     width: 80px;
     border-radius: 8px;
+    margin-left: auto;
+    margin-bottom: 10px;
 }
 
 

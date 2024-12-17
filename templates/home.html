@@ -115,6 +115,7 @@
                                     <form action="{{ url_for('home') }}" method="POST" style="display: inline;">
                                         <input type="hidden" name="form_type" value="edit_flight">
                                         <input type="hidden" name="flight_id" value="{{ flight.id }}">
+                                        <br>
                                         <label>Attribute to Edit:</label>
                                         <select name="attribute" id="attributeSelection{{flight.id}}" onchange="getInputType('{{flight.id}}')">
                                             <option value="Airline">Airline</option>
@@ -150,11 +151,13 @@
                                 <li>
                                     Flight ID: {{ flight.id }}, Airline: {{ flight.airline }}, Origin: {{ flight.origin }}, Destination: {{ flight.destination }}, Date: {{ flight.departure_date }}
                                     <form action="{{ url_for('home') }}" method="POST" style="display: inline;">
-                                        <input type="hidden" name="form_type" value="delete_flight">
-                                        <input type="hidden" name="flight_id" value="{{ flight.id }}">
-                                        <button type="submit" class="deleteButton">
-                                            Delete
-                                        </button>
+                                        <div class="flight_entry">
+                                            <input type="hidden" name="form_type" value="delete_flight">
+                                            <input type="hidden" name="flight_id" value="{{ flight.id }}">
+                                            <button type="submit" class="deleteButton">
+                                                Delete
+                                            </button>
+                                        </div>
                                     </form>
                                 </li>
                             {% endfor %}
