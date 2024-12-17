@@ -44,15 +44,6 @@ def home(): # This is the home page!!!
         editable_flights = user_flights[(current_edit_page - 1) * items_per_page : (current_edit_page) * items_per_page]
         deletable_flights = user_flights[(current_delete_page - 1) * items_per_page : (current_delete_page) * items_per_page]
 
-    # print("User edit flights: ", len(editable_flights))
-    # print("User del flights: ", len(deletable_flights))
-    if user_flights:
-        print("Num flights: ", len(user_flights))
-    print(current_edit_page)
-    print(current_delete_page)
-    if editable_flights:
-        print(len(editable_flights))
-
     return render_template('home.html', userID=userID, result=result, 
                            editable_flights=editable_flights, curr_edit_page=current_edit_page,
                            deletable_flights=deletable_flights, curr_delete_page=current_delete_page,
@@ -72,7 +63,6 @@ def home_form_submission():
         flight_date = request.form.get('flight_date')
 
         result = average_delay(origin, destination, airline, flight_date)
-        print(f"Average delay is {result}")
         result = format_delay_info(result)
         #flash(f'Prediction: The average delay for this flight is {result}.')
 
